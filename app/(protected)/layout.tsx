@@ -1,104 +1,12 @@
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/public/logo.png";
-import { 
-  HomeIcon, 
-  GlobeIcon, 
-  DollarSignIcon, 
-  CircleUserIcon, 
-  ClockIcon, 
-  BriefcaseIcon, 
-  BuildingIcon,
-  UsersIcon,
-  ListIcon,
-  MonitorIcon,
-  Users2Icon
-} from "lucide-react";
+import { CircleUserIcon } from "lucide-react";
 import DashboardItems from "@/app/components/dashboard/dashboardItems";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-export const navLinks = {
-  people: {
-    label: "People",
-    icon: Users2Icon,
-    items: [
-      {
-        name: "Email Status",
-        href: "/dashboard/email-status",
-        icon: ClockIcon,
-      },
-      {
-        name: "Job Title",
-        href: "/dashboard/job-title",
-        icon: BriefcaseIcon,
-      },
-      {
-        name: "Company",
-        href: "/dashboard/company",
-        icon: BuildingIcon,
-      },
-      {
-        name: "Employees",
-        href: "/dashboard/employees",
-        icon: UsersIcon,
-      },
-      {
-        name: "Industry & keywords",
-        href: "/dashboard/industry",
-        icon: ListIcon,
-      },
-      {
-        name: "Technology",
-        href: "/dashboard/technology",
-        icon: MonitorIcon,
-      },
-      {
-        name: "Revenue",
-        href: "/dashboard/revenue",
-        icon: DollarSignIcon,
-      },
-    ]
-  },
-  companies: {
-    label: "Companies",
-    icon: BuildingIcon,
-    items: [
-      {
-        name: "Company",
-        href: "/dashboard/companies",
-        icon: BuildingIcon,
-      },
-      {
-        name: "Account Location",
-        href: "/dashboard/account-location",
-        icon: GlobeIcon,
-      },
-      {
-        name: "Employees",
-        href: "/dashboard/company-employees",
-        icon: UsersIcon,
-      },
-      {
-        name: "Industry & keywords",
-        href: "/dashboard/company-industry",
-        icon: ListIcon,
-      },
-      {
-        name: "Technology",
-        href: "/dashboard/company-technology",
-        icon: MonitorIcon,
-      },
-      {
-        name: "Revenue",
-        href: "/dashboard/company-revenue",
-        icon: DollarSignIcon,
-      },
-    ]
-  }
-};
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -107,7 +15,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             <div className="flex h-full max-h-screen flex-col gap-2">
                 <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
                     <Link href="/" className="flex items-center gap-2 font-bold">
-                        <Image src={logo} alt="logo" className="" />
+                        <Image src={logo} alt="logo" className="" width={200} height={200}/>
                     </Link>
                 </div>
                 <div className="flex-1 overflow-y-auto">
@@ -144,4 +52,4 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default layout
+export default layout;

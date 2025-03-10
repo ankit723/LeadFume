@@ -34,8 +34,8 @@ export default function NotFound() {
         </h2>
         
         <p className="text-muted-foreground max-w-md mx-auto mb-8">
-          Looks like the page you're looking for has evaporated into thin air. 
-          Don't worry, our lead generation engine is still running strong!
+          Looks like the page you &apos;re looking for has evaporated into thin air. 
+          Don&apos;t worry, our lead generation engine is still running strong!
         </p>
 
         {/* Action button */}

@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
-import { navLinks } from '@/app/(protected)/layout'
+import { navLinks } from '@/app/config/navigation'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 

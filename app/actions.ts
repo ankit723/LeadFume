@@ -2,8 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
-import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,14 +18,25 @@ export async function getUser() {
     return user;
 }
 
-export async function createUser(data: any){
+interface CreateUserData {
+    id?: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    profileImage?: string;
+    phone: string;
+    dateOfBirth: string;
+    gender: string;
+}
+
+export async function createUser(data: CreateUserData) {
     const user = await prisma.user.create({
         data: {
-            id: data.id,
+            id: data.id || undefined,
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
-            profileImage: data.profileImage,
+            profileImage: data.profileImage || "",
             phone: data.phone,
             dateOfBirth: data.dateOfBirth,
             gender: data.gender,
@@ -74,7 +83,7 @@ export async function uploadImage(base64Image: string) {
         const filePath = `profiles/${fileName}`;
         
         // Upload to Supabase Storage
-        const { data, error } = await supabase.storage
+        const {error } = await supabase.storage
             .from('user-images')
             .upload(filePath, buffer, {
                 contentType,

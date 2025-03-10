@@ -26,6 +26,17 @@ import { ImageUpload } from "../ui/image-upload"
 import { createUser, uploadImage } from "@/app/actions"
 import { toast } from "sonner"
 
+interface UserFormData {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  profileImage?: string;
+}
+
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
@@ -86,7 +97,7 @@ export default function OnboardingForm({user}: {user: User | null}) {
       }
       
       // Create user with the updated profile image URL
-      const userData = {
+      const userData: UserFormData = {
         ...values,
         id: user?.id,
         profileImage: profileImageUrl || ""
