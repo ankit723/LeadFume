@@ -6,7 +6,7 @@ export default function Page() {
       {/* Organic shape background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top right blue shape */}
-        <div className="absolute -top-20 -right-20 w-[600px] h-[600px] rounded-full bg-[#4B69FF] blur-3xl opacity-80 transform rotate-12" />
+        <div className="absolute -top-20 -right-20 w-[600px] h-[600px] rounded-full bg-[#4d6aff] blur-3xl opacity-80 transform rotate-12" />
         
         {/* Left side blue shape */}
         <div className="absolute -left-40 top-1/4 w-[800px] h-[800px] rounded-full bg-[#4B69FF] blur-3xl opacity-80 transform -rotate-45" />

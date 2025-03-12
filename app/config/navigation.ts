@@ -14,77 +14,98 @@ export const navLinks = {
   people: {
     label: "People",
     icon: Users2Icon,
+    url: "/dashboard/people",
     items: [
       {
         name: "Email Status",
-        href: "/dashboard/email-status",
+        href: "/dashboard/people/email-status",
         icon: ClockIcon,
+        locked: false,
       },
       {
         name: "Job Title",
-        href: "/dashboard/job-title",
+        href: "/dashboard/people/job-title",
         icon: BriefcaseIcon,
+        locked: false,
       },
       {
         name: "Company",
-        href: "/dashboard/company",
+        href: "/dashboard/people/company",
         icon: BuildingIcon,
+        locked: false,
       },
       {
         name: "Employees",
-        href: "/dashboard/employees",
+        href: "/dashboard/people/employees",
         icon: UsersIcon,
+        locked: false,
       },
       {
         name: "Industry & keywords",
-        href: "/dashboard/industry",
+        href: "/dashboard/people/industry",
         icon: ListIcon,
+        locked: false,
+      },
+      {
+        name: 'Location',
+        href: '/dashboard/people/location',
+        icon: GlobeIcon,
+        locked: false,
       },
       {
         name: "Technology",
-        href: "/dashboard/technology",
+        href: "/dashboard/people/technology",
         icon: MonitorIcon,
+        locked: true,
       },
       {
         name: "Revenue",
-        href: "/dashboard/revenue",
+        href: "/dashboard/people/revenue",
         icon: DollarSignIcon,
+        locked: true,
       },
     ]
   },
   companies: {
     label: "Companies",
     icon: BuildingIcon,
+    url: "/dashboard/companies",
     items: [
       {
         name: "Company",
-        href: "/dashboard/companies",
+        href: "/dashboard/companies/company",
         icon: BuildingIcon,
+        locked: false,
       },
       {
         name: "Account Location",
-        href: "/dashboard/account-location",
+        href: "/dashboard/companies/account-location",
         icon: GlobeIcon,
+        locked: false,
       },
       {
         name: "Employees",
-        href: "/dashboard/company-employees",
+        href: "/dashboard/companies/employees",
         icon: UsersIcon,
+        locked: false,
       },
       {
         name: "Industry & keywords",
-        href: "/dashboard/company-industry",
+        href: "/dashboard/companies/industry",
         icon: ListIcon,
+        locked: false,
       },
       {
         name: "Technology",
-        href: "/dashboard/company-technology",
+        href: "/dashboard/companies/technology",
         icon: MonitorIcon,
+        locked: true,
       },
       {
         name: "Revenue",
-        href: "/dashboard/company-revenue",
+        href: "/dashboard/companies/revenue",
         icon: DollarSignIcon,
+        locked: true,
       },
     ]
   }
