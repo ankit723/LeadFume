@@ -25,7 +25,7 @@ const DashboardItems = () => {
                         {category.items.map((item) => (
                             <Link
                                 key={item.name}
-                                href={`${item.locked ? '#' : item.href}`}
+                                href={`${item.locked ? '/pricing' : item.href}`}
                                 className={cn(
                                     pathname === item.href ? `bg-primary/60 text-primary-foreground ${item.locked ? 'cursor-not-allowed bg-primary2/50' : ''}`: `text-muted-foreground ${item.locked ? 'cursor-not-allowed hover:bg-primary2/50' : 'hover:bg-primary/20'}`,
                                     'flex items-center justify-between gap-2 px-2 py-2 rounded-md transition-all text-sm'

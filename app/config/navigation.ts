@@ -14,7 +14,7 @@ export const navLinks = {
   people: {
     label: "People",
     icon: Users2Icon,
-    url: "/dashboard/people",
+    url: "/dashboard/people/email-status",
     items: [
       {
         name: "Email Status",
@@ -69,7 +69,7 @@ export const navLinks = {
   companies: {
     label: "Companies",
     icon: BuildingIcon,
-    url: "/dashboard/companies",
+    url: "/dashboard/companies/company",
     items: [
       {
         name: "Company",
@@ -110,3 +110,7 @@ export const navLinks = {
     ]
   }
 }; 
+
+export const nonInfoPagelist=[
+  '/pricing',
+]
