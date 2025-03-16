@@ -5,7 +5,12 @@ import { navLinks } from '@/app/config/navigation'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Lock } from 'lucide-react'
-const DashboardItems = () => {
+
+interface DashboardItemsProps {
+    onItemClick?: () => void;
+}
+
+const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
     const pathname = usePathname()
     
     return (
@@ -13,8 +18,11 @@ const DashboardItems = () => {
             {Object.entries(navLinks).map(([key, category]) => (
                 <div key={key} className="flex flex-col gap-1">
                     {/* Category Header */}
-                    <Link href={category.url} className={cn('bg-primary dark:bg-primary/90 text-primary-foreground dark:text-primary-foreground/90 flex items-center gap-2 px-2 py-2 rounded-md transition-all text-sm'
-                    )}>
+                    <Link 
+                        href={category.url} 
+                        className={cn('bg-primary dark:bg-primary/90 text-primary-foreground dark:text-primary-foreground/90 flex items-center gap-2 px-2 py-2 rounded-md transition-all text-sm')}
+                        onClick={onItemClick}
+                    >
                         <category.icon className="w-4 h-4" />
                         <span className="font-semibold text-sm">{category.label}</span>
                     </Link>
@@ -26,6 +34,7 @@ const DashboardItems = () => {
                             <Link
                                 key={item.name}
                                 href={`${item.locked ? '/pricing' : item.href}`}
+                                onClick={onItemClick}
                                 className={cn(
                                     pathname === item.href 
                                         ? `bg-primary/60 dark:bg-primary/50 text-white dark:text-white ${item.locked ? 'cursor-not-allowed bg-primary2/50 dark:bg-primary2/40' : ''}`

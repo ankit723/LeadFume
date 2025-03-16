@@ -16,7 +16,7 @@ const page = async ({params}:PageProps) => {
       <div className="flex-1 flex flex-col gap-4 mx-4">
         <UsersInfo />
       </div>
-      <div className="flex-1 flex gap-4 mx-4">
+      <div className="flex-1 flex flex-wrap gap-4 mx-4">
         {filterComponent && <DynamicFilter />}  
         <div className="flex-1 flex flex-col gap-4 mx-4"> 
           <h1 className="text-2xl font-bold">Filter Results</h1>

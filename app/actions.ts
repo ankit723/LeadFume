@@ -6,8 +6,10 @@ import { createClient } from "@/lib/supabase/server";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function getUser() {
+
     const { userId } = await auth();
     if (!userId) {
+        console.log(null)
         return null;
     }
     const user = await prisma.user.findUnique({
@@ -15,6 +17,7 @@ export async function getUser() {
         id: userId,
         },
     });
+    console.log(user)
     return user;
 }
 
