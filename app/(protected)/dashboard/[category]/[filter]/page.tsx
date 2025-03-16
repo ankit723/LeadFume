@@ -1,13 +1,15 @@
 import filterOptions from "@/app/config/filterOptions"
 import React from "react"
 import UsersInfo from "@/app/components/dashboard/usersInfo"
+import { FilterOption } from "@/app/types/filterOptions"
+
 interface PageProps {
   params: Promise<{ category: string, filter: string }>;
 }
 
 const page = async ({params}:PageProps) => {
   const {category, filter} = await params
-  const filterComponent = filterOptions.find((option:any) => (option.filterCategory === category && option.filterName === filter))?.filterComponent
+  const filterComponent = filterOptions.find((option: FilterOption) => (option.filterCategory === category && option.filterName === filter))?.filterComponent
   const DynamicFilter = filterComponent as React.ComponentType;
   return (
     <div>

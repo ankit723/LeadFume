@@ -11,11 +11,11 @@ export default function Hero() {
     <section className="flex flex-col lg:flex-row items-center justify-between px-4 md:px-8 lg:px-12 py-6 lg:py-8 gap-6">
       {/* Left Content */}
       <div className="lg:max-w-[65%]">
-        <h1 className="text-4xl tracking-wide md:text-6xl font-bold text-primary2 leading-tight">
+        <h1 className="text-4xl tracking-wide md:text-6xl font-bold text-primary2 dark:text-primary leading-tight">
           Implementing <br /> Software<br /> Solutions
         </h1>
-        <p className="mt-3 text-black text-base md:text-lg font-normal max-w-lg">
-          Innovating Tomorrow's Solutions, Today. Logo – Your Trusted IT Partner
+        <p className="mt-3 text-black dark:text-gray-200 text-base md:text-lg font-normal max-w-lg">
+          Innovating Tomorrow&apos; s Solutions, Today. Logo – Your Trusted IT Partner
         </p>
 
         {/* Email Input & Button */}
@@ -24,7 +24,7 @@ export default function Hero() {
             <Input
               type="email"
               placeholder="Your email address"
-              className="p-4 bg-white"
+              className="p-4 bg-white dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"
             />
           <Link href="/dashboard">
             <Button className="p-3 py-4">

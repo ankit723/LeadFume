@@ -13,7 +13,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     const user= await getUser();
     return (
         <section className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-            <aside className="hidden md:block border-r bg-white">
+            <aside className="hidden md:block border-r bg-white dark:bg-background">
                 <div className="flex h-full max-h-screen flex-col gap-2">
                     <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
                         <Link href="/" className="flex items-center gap-2 font-bold">
@@ -28,7 +28,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
                 </div>
             </aside>
             <div className="flex flex-col">
-                <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6 bg-white">
+                <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6 bg-white dark:bg-background">
                     <div className="w-full grid grid-cols-9">
                         <div className="col-span-3">
                             <SearchBar />

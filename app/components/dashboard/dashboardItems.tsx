@@ -13,7 +13,7 @@ const DashboardItems = () => {
             {Object.entries(navLinks).map(([key, category]) => (
                 <div key={key} className="flex flex-col gap-1">
                     {/* Category Header */}
-                    <Link href={category.url} className={cn(' bg-primary flex items-center gap-2 px-2 py-2 rounded-md transition-all text-sm'
+                    <Link href={category.url} className={cn('bg-primary dark:bg-primary/90 text-primary-foreground dark:text-primary-foreground/90 flex items-center gap-2 px-2 py-2 rounded-md transition-all text-sm'
                     )}>
                         <category.icon className="w-4 h-4" />
                         <span className="font-semibold text-sm">{category.label}</span>
@@ -27,7 +27,11 @@ const DashboardItems = () => {
                                 key={item.name}
                                 href={`${item.locked ? '/pricing' : item.href}`}
                                 className={cn(
-                                    pathname === item.href ? `bg-primary/60 text-primary-foreground ${item.locked ? 'cursor-not-allowed bg-primary2/50' : ''}`: `text-muted-foreground ${item.locked ? 'cursor-not-allowed hover:bg-primary2/50' : 'hover:bg-primary/20'}`,
+                                    pathname === item.href 
+                                        ? `bg-primary/60 dark:bg-primary/50 text-white dark:text-white ${item.locked ? 'cursor-not-allowed bg-primary2/50 dark:bg-primary2/40' : ''}`
+                                        : `text-muted-foreground dark:text-muted-foreground/80 ${item.locked 
+                                            ? 'cursor-not-allowed hover:bg-primary2/50 dark:hover:bg-primary2/40' 
+                                            : 'hover:bg-primary/20 dark:hover:bg-primary/10'}`,
                                     'flex items-center justify-between gap-2 px-2 py-2 rounded-md transition-all text-sm'
                                 )}
                             >
@@ -35,7 +39,7 @@ const DashboardItems = () => {
                                     <item.icon className="w-4 h-4" />
                                     {item.name}
                                 </div>
-                                {item.locked && <Lock className="w-4 h-4 text-primary2" />}
+                                {item.locked && <Lock className="w-4 h-4 text-primary2 dark:text-primary2/90" />}
                             </Link>
                         ))}
                     </div>
