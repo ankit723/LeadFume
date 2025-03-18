@@ -13,6 +13,13 @@ export default function OverView() {
           height={700}
           className="w-full max-w-6xl mx-auto"
         />
+         <Image
+          src="/home/Company.svg" 
+          alt="Web Dashboard"
+          width={900}
+          height={700}
+          className="w-full max-w-6xl mx-auto -mt-5"
+        />
       </div>
     </section>
   );
