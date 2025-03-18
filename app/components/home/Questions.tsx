@@ -137,7 +137,7 @@ const Questions: FC = () => {
                   placeholder="Email address"
                   className="px-4 py-3 rounded-lg bg-white text-gray-800 w-full sm:max-w-xs"
                 />
-                <button className="bg-emerald-400 hover:bg-emerald-500 font-medium px-6 py-3 rounded-lg">
+                <button className="bg-[#20cfc6] hover:bg-[#20cfc6] font-medium px-6 py-3 rounded-lg">
                   Get Started
                 </button>
               </div>
