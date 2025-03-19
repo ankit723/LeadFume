@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { ChevronDown, User2, Info, X, Plus } from "lucide-react";
+import { ChevronDown, User2, Info,  Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -90,16 +90,16 @@ const JobTitleFilter = () => {
   };
 
   // Count active filters
-  const getActiveFilterCount = () => {
-    let count = 0;
-    if (currentFilters.jobTitle) count++;
-    if (currentFilters.excludeJobTitle) count++;
-    if (currentFilters.pastJobTitle) count++;
-    if (currentFilters.knownStatus) count++;
-    if (currentFilters.managementLevels.length > 0) count++;
-    if (currentFilters.departments.length > 0) count++;
-    return count;
-  };
+  // const getActiveFilterCount = () => {
+  //   let count = 0;
+  //   if (currentFilters.jobTitle) count++;
+  //   if (currentFilters.excludeJobTitle) count++;
+  //   if (currentFilters.pastJobTitle) count++;
+  //   if (currentFilters.knownStatus) count++;
+  //   if (currentFilters.managementLevels.length > 0) count++;
+  //   if (currentFilters.departments.length > 0) count++;
+  //   return count;
+  // };
 
   // Handle filter changes
   const handleFilterChange = (key: string, value: string | boolean | string[]) => {
@@ -124,9 +124,9 @@ const JobTitleFilter = () => {
   };
 
   // Clear all filters
-  const clearAllFilters = () => {
-    router.push(pathname);
-  };
+  // const clearAllFilters = () => {
+  //   router.push(pathname);
+  // };
 
   const filteredJobTitles = jobTitles.filter((title) =>
     title.toLowerCase().includes(jobTitleSearchValue.toLowerCase())
@@ -143,7 +143,7 @@ const JobTitleFilter = () => {
             Job Titles
           </h4>
           <div className="flex items-center gap-2">
-            {getActiveFilterCount() > 0 && (
+            {/* {getActiveFilterCount() > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -153,7 +153,7 @@ const JobTitleFilter = () => {
                 <X className="h-3 w-3 mr-1" />
                 {getActiveFilterCount()}
               </Button>
-            )}
+            )} */}
             <CollapsibleTrigger className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
               <ChevronDown
                 className={cn(

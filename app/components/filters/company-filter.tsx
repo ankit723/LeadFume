@@ -172,21 +172,21 @@ const CompanyFilter = () => {
     }
   };
 
-  const clearFilters = () => {
-    setSelectedIncludeCompanies([]);
-    setSelectedExcludeCompanies([]);
-    setSelectedPastCompanies([]);
-    router.push(pathname);
-  };
+//   const clearFilters = () => {
+//     setSelectedIncludeCompanies([]);
+//     setSelectedExcludeCompanies([]);
+//     setSelectedPastCompanies([]);
+//     router.push(pathname);
+//   };
 
-  const activeFiltersCount = [
-    ...selectedIncludeCompanies,
-    ...selectedExcludeCompanies,
-    ...selectedPastCompanies,
-    currentFilters.isNotAnyOf ? 1 : 0,
-    currentFilters.includePastCompany ? 1 : 0,
-    currentFilters.domainExists ? 1 : 0,
-  ].filter(Boolean).length;
+//   const activeFiltersCount = [
+//     ...selectedIncludeCompanies,
+//     ...selectedExcludeCompanies,
+//     ...selectedPastCompanies,
+//     currentFilters.isNotAnyOf ? 1 : 0,
+//     currentFilters.includePastCompany ? 1 : 0,
+//     currentFilters.domainExists ? 1 : 0,
+//   ].filter(Boolean).length;
 
   const filteredIncludeSuggestions = companySuggestions.filter((company) =>
     company.name.toLowerCase().includes(searchInclude.toLowerCase())
@@ -206,7 +206,7 @@ const CompanyFilter = () => {
             Company
           </h4>
           <div className="flex items-center gap-2">
-            {activeFiltersCount > 0 && (
+            {/* {activeFiltersCount > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -216,7 +216,7 @@ const CompanyFilter = () => {
                 <X className="h-3 w-3 mr-1" />
                 {activeFiltersCount}
               </Button>
-            )}
+            )} */}
             <CollapsibleTrigger className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
               <ChevronDown
                 className={cn(
