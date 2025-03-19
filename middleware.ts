@@ -15,7 +15,7 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next()
   }
 
-  const headers = new Headers(req.headers);
+  const headers = new Headers();
   headers.set("x-current-path", req.nextUrl.pathname);
   return NextResponse.next({ headers });
 });

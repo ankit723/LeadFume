@@ -104,6 +104,7 @@ export default function OnboardingForm({user}: {user: User | null}) {
       };
       
       const newUser = await createUser(userData);
+      console.log(newUser)
       
       if (newUser) {
         toast.success("Profile created successfully!");
