@@ -14,7 +14,7 @@ const About = () => {
         {/* Left column */}
         <div className="w-full md:w-1/2">
           <p className="text-base mb-6">
-          &quot;At [Company Name], we are pioneers in the realm of IT solutions, dedicated to transforming businesses
+          &quot;At LEADFUME, we are pioneers in the realm of IT solutions, dedicated to transforming businesses
             through innovative technologies. With a relentless commitment to excellence, we specialize in custom
             software development, cloud computing, cybersecurity, IT consulting, and managed services.&quot;
           </p>
@@ -44,7 +44,7 @@ const About = () => {
           <div className="flex flex-col space-y-2">
             <h3 className="text-[31.87px] text-[#4328EB]">Progress</h3>
             <p className="text-sm">
-            &quot;Driven by a commitment to excellence, [Company Name] has consistently achieved milestones in providing
+            &quot;Driven by a commitment to excellence, LEADFUME has consistently achieved milestones in providing
               top-notch IT services. Our progress is marked by successful implementations, satisfied clients.&quot;
             </p>
           </div>
@@ -55,7 +55,7 @@ const About = () => {
       <div className="mt-20">
         <h2 className="text-[#4328EB] text-5xl mb-4">Milestones</h2>
         <p className="mb-8">
-        &quot;At [Company Name], Milestones Mark Our Success, Representing Achievements, Growth, And Our Unwavering
+        &quot;At LEADFUME, Milestones Mark Our Success, Representing Achievements, Growth, And Our Unwavering
           Commitment To Excellence.&quot;
         </p>
         <hr className="bg-[#EED061] w-full h-[2.39px] my-6" />

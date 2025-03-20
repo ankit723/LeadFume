@@ -118,14 +118,14 @@ const EmployeeFilter = () => {
 
   return (
     <div className="w-[280px] bg-white dark:bg-background p-4 rounded-lg border dark:border-gray-800 shadow-sm">
-      <div className="space-y-3">
-        <h4 className="text-base text-center font-semibold mb-6 bg-primary dark:bg-primary/70 text-black dark:text-white p-2 rounded-md shadow-sm">
+      <div className="">
+        <h4 className="text-base text-center font-semibold bg-primary dark:bg-primary/70 text-black dark:text-white p-2 rounded-md shadow-sm">
           Employees
         </h4>
-
+{/* 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            {/* {selectedCount > 0 && (
+            {selectedCount > 0 && (
               <button
                 onClick={clearFilters}
                 className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-full px-2 py-0.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
@@ -133,18 +133,19 @@ const EmployeeFilter = () => {
                 <X className="h-3 w-3" />
                 <span>{selectedCount}</span>
               </button>
-            )} */}
+            )}
           </div>
-        </div>
+        </div> */}
 
-        <div className="space-y-4">
+        <div className="space-y-1">
             {/* Predefined Range */}
-            <div className="space-y-2">
+            <div className="">
               <div
-                className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors cursor-pointer"
+                className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors cursor-pointer"
                 onClick={() => handleRangeTypeChange("predefined")}
               >
                 <Checkbox
+                className="cursor-pointer"
                   checked={employeeRangeType === "predefined"}
                   onCheckedChange={() => handleRangeTypeChange("predefined")}
                   onClick={(e) => e.stopPropagation()}
@@ -152,7 +153,7 @@ const EmployeeFilter = () => {
                 <span className="text-sm font-medium dark:text-gray-200">Predefined Range</span>
               </div>
               {employeeRangeType === "predefined" && (
-                <div className="ml-6 space-y-1 max-h-[200px] overflow-y-auto">
+                <div className="ml-3 max-h-[200px] overflow-y-auto">
                   {employeeRanges.map((range) => (
                     <div
                       key={range.id}
@@ -160,6 +161,7 @@ const EmployeeFilter = () => {
                     >
                       <div className="flex items-center gap-2">
                         <Checkbox
+                        className="cursor-pointer"
                           id={`range-${range.id}`}
                           checked={localSelectedRanges.includes(range.id)}
                           onCheckedChange={(checked) => handleRangeChange(range.id, checked as boolean)}
@@ -178,12 +180,13 @@ const EmployeeFilter = () => {
             </div>
 
             {/* Custom Range */}
-            <div className="space-y-2 border-t dark:border-gray-700 pt-4">
+            <div className=" border-t dark:border-gray-700 pt-1">
               <div
-                className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors cursor-pointer"
+                className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors cursor-pointer"
                 onClick={() => handleRangeTypeChange("custom")}
               >
                 <Checkbox
+                className="cursor-pointer"
                   checked={employeeRangeType === "custom"}
                   onCheckedChange={() => handleRangeTypeChange("custom")}
                   onClick={(e) => e.stopPropagation()}
@@ -214,13 +217,14 @@ const EmployeeFilter = () => {
             </div>
 
             {/* Unknown */}
-            <div className="border-t dark:border-gray-700 pt-4">
-              <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+            <div className="border-t dark:border-gray-700 pt-1">
+              <div className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
                 <Checkbox
+                className="cursor-pointer"
                   checked={employeeRangeType === "unknown"}
                   onCheckedChange={() => handleRangeTypeChange("unknown")}
                 />
-                <span className="text-sm font-medium dark:text-gray-200"># of employees is unknown</span>
+                <span className="text-sm font-medium dark:text-gray-200 tracking-tighter"># of employees is unknown</span>
               </div>
             </div>
           </div>

@@ -138,12 +138,12 @@ const JobTitleFilter = () => {
   return (
     <div className="w-[280px] bg-white dark:bg-background p-4 rounded-lg border dark:border-gray-800 shadow-sm">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-1">
           <h4 className="text-base text-center font-semibold bg-primary dark:bg-primary/70 text-black dark:text-white p-2 rounded-md shadow-sm flex-1">
             Job Titles
           </h4>
-          <div className="flex items-center gap-2">
-            {/* {getActiveFilterCount() > 0 && (
+          {/* <div className="flex items-center gap-2">
+            {getActiveFilterCount() > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -153,7 +153,7 @@ const JobTitleFilter = () => {
                 <X className="h-3 w-3 mr-1" />
                 {getActiveFilterCount()}
               </Button>
-            )} */}
+            )}
             <CollapsibleTrigger className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
               <ChevronDown
                 className={cn(
@@ -162,10 +162,10 @@ const JobTitleFilter = () => {
                 )}
               />
             </CollapsibleTrigger>
-          </div>
+          </div> */}
         </div>
 
-        <CollapsibleContent className="space-y-4">
+        <CollapsibleContent className="">
           {/* Job Title Type Section */}
           <div className="space-y-3">
             <RadioGroup
@@ -173,8 +173,8 @@ const JobTitleFilter = () => {
               onValueChange={(value) => handleFilterChange("jobTitleType", value)}
             >
               {/* Is Any Of */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+              <div className="">
+                <div className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
                   <RadioGroupItem value="isAnyOf" id="isAnyOf" />
                   <Label htmlFor="isAnyOf" className="text-sm font-medium dark:text-gray-200">
                     Is any of
@@ -184,18 +184,18 @@ const JobTitleFilter = () => {
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="w-full justify-between text-sm bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400"
+                      className="w-[90%] justify-between text-xs bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 ml-3 text-gray-600 dark:text-gray-400"
                     >
                       {currentFilters.jobTitle || "Search for a job title"}
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[260px] p-0">
+                  <PopoverContent className="w-[260px]">
                     <Input
                       placeholder="Search for a job title"
                       value={jobTitleSearchValue}
                       onChange={(e) => setJobTitleSearchValue(e.target.value)}
-                      className="m-2"
+                      className=""
                     />
                     <div className="max-h-[200px] overflow-y-auto">
                       {filteredJobTitles.map((title) => (
@@ -216,8 +216,8 @@ const JobTitleFilter = () => {
               </div>
 
               {/* Is Not Any Of */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+              <div className="">
+                <div className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
                   <RadioGroupItem value="isNotAnyOf" id="isNotAnyOf" />
                   <Label htmlFor="isNotAnyOf" className="text-sm font-medium dark:text-gray-200">
                     Is not any of
@@ -228,18 +228,18 @@ const JobTitleFilter = () => {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-between text-sm bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400"
+                        className="w-[90%] justify-between text-xs bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 ml-3 text-gray-600 dark:text-gray-400"
                       >
                         {currentFilters.excludeJobTitle || "Enter titles to exclude"}
                         <ChevronDown className="h-4 w-4" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[260px] p-0">
+                    <PopoverContent className="w-[260px] p-1">
                       <Input
                         placeholder="Enter titles to exclude"
                         value={excludeTitleSearchValue}
                         onChange={(e) => setExcludeTitleSearchValue(e.target.value)}
-                        className="m-2"
+                        className=""
                       />
                       <div className="max-h-[200px] overflow-y-auto">
                         {filteredJobTitles.map((title) => (
@@ -280,18 +280,18 @@ const JobTitleFilter = () => {
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="w-full justify-between text-sm bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400"
+                      className="w-[90%] justify-between text-xs bg-white ml-3 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400"
                     >
                       {currentFilters.pastJobTitle || "Search for past job title"}
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[260px] p-0">
+                  <PopoverContent className="w-[260px] ">
                     <Input
                       placeholder="Search for a past job title"
                       value={pastJobTitleSearchValue}
                       onChange={(e) => setPastJobTitleSearchValue(e.target.value)}
-                      className="m-2"
+                      className=" "
                     />
                     <div className="max-h-[200px] overflow-y-auto">
                       {filteredJobTitles.map((title) => (
@@ -314,7 +314,7 @@ const JobTitleFilter = () => {
           </div>
 
           {/* Known Status */}
-          <div className="space-y-1 border-t dark:border-gray-700 pt-4">
+          <div className=" border-t dark:border-gray-700 pt-1">
             <RadioGroup
               defaultValue={currentFilters.knownStatus}
               onValueChange={(value) => handleFilterChange("knownStatus", value)}
@@ -338,10 +338,10 @@ const JobTitleFilter = () => {
           <Collapsible
             open={managementLevelOpen}
             onOpenChange={setManagementLevelOpen}
-            className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+            className=" pt-2 border-t border-gray-200 dark:border-gray-700 pl-2"
           >
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold dark:text-gray-200">Management Level</h4>
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="text-sm  font-semibold dark:text-gray-200">Management Level</h4>
               <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
                 <ChevronDown
                   className={cn(
@@ -351,7 +351,7 @@ const JobTitleFilter = () => {
                 />
               </CollapsibleTrigger>
             </div>
-            <CollapsibleContent className="space-y-1">
+            <CollapsibleContent className="">
               {managementLevels.map((level) => (
                 <div
                   key={level.label}
@@ -378,10 +378,10 @@ const JobTitleFilter = () => {
           <Collapsible
             open={departmentsOpen}
             onOpenChange={setDepartmentsOpen}
-            className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+            className="pt-2 pl-2 border-t border-gray-200 dark:border-gray-700"
           >
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold dark:text-gray-200">Departments</h4>
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="text-sm font-semibold dark:text-gray-200 ">Departments</h4>
               <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
                 <ChevronDown
                   className={cn(
@@ -391,18 +391,18 @@ const JobTitleFilter = () => {
                 />
               </CollapsibleTrigger>
             </div>
-            <CollapsibleContent className="space-y-3">
+            <CollapsibleContent className="space-y-1">
               <Input
                 placeholder="Search departments"
                 value={departmentSearchValue}
                 onChange={(e) => setDepartmentSearchValue(e.target.value)}
                 className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
               />
-              <div className="max-h-[200px] overflow-y-auto space-y-1">
+              <div className="max-h-[200px] overflow-y-auto">
                 {filteredDepartments.map((dept) => (
                   <div
                     key={dept.label}
-                    className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
+                    className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
                   >
                     <Checkbox
                       id={`dept-${dept.label}`}
