@@ -27,7 +27,7 @@ const GetTouch = () => {
 
         {/* Content */}
         <div className="w-full md:w-1/2 space-y-4">
-          <p className="text-blue-500 font-medium">Customer Support</p>
+          <p className="text-primary2 font-medium">Customer Support</p>
           <h2 className="text-3xl md:text-4xl font-bold">Get in touch with your customers</h2>
           <p className="text-gray-600">
             Stay on top of things and revamp your work process with our game-changing feature. Get a bird&apos;s eye view
@@ -49,7 +49,7 @@ const GetTouch = () => {
             </div>
           </div>
 
-          <Button variant="link" className="text-blue-500 p-0 flex items-center gap-2 font-medium">
+          <Button variant="link" className="text-primary2 p-0 flex items-center gap-2 font-medium">
             Learn More
             <div className="bg-yellow-300 rounded-full p-1">
               <ArrowRightIcon className="h-4 w-4" />

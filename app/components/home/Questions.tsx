@@ -60,7 +60,7 @@ const Questions: FC = () => {
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-1/3">
-            <p className="text-indigo-600 font-medium mb-2">
+            <p className="text-primary2 font-medium mb-2">
               Frequently Asked Questions
             </p>
             <h2 className="text-4xl font-bold mb-4">

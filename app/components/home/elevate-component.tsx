@@ -91,7 +91,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 const ElevateComponent = () => {
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl md:text-5xl font-bold text-[#4328eb] mb-3">Elevate Your Brand Digitally</h1>
+      <h1 className="text-4xl md:text-5xl font-bold text-primary2 mb-3">Elevate Your Brand Digitally</h1>
       <p className="text-gray-600 mb-6 max-w-3xl">
         Our tailored solutions empower your online presence, ensuring growth and success in a digitized landscape.
       </p>

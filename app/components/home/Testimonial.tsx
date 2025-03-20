@@ -159,7 +159,7 @@ const Testimonial: FC<TestimonialProps> = ({ name, title, company, testimonial, 
 const Testimonials: FC = () => {
   return (
     <section className="py-16 px-4 max-w-7xl mx-auto">
-      <h2 className="sm:text-6xl text-4xl font-bold text-indigo-600 mb-4">Testimonials</h2>
+      <h2 className="sm:text-6xl text-4xl font-bold text-primary2 mb-4">Testimonials</h2>
       <p className="text-gray-700 max-w-3xl mb-12">
         Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur ma. Ut enim ad
         minim veniam, quis nostrud exercitation.

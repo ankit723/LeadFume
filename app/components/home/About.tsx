@@ -6,7 +6,7 @@ const About = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <h1 className="text-[55.77px] text-[#4328EB] mt-10">About Us</h1>
+      <h1 className="text-[55.77px] text-primary2 mt-10">About Us</h1>
       <hr className="bg-[#EED061] w-full h-[2.39px] my-3" />
 
       {/* Main content section */}
@@ -26,7 +26,7 @@ const About = () => {
         {/* Right column */}
         <div className="w-full md:w-1/2 space-y-8">
           <div className="flex flex-col space-y-2">
-            <h3 className="text-[31.87px] text-[#4328EB]">Aim</h3>
+            <h3 className="text-[31.87px] text-primary2">Aim</h3>
             <p className="text-sm">
             &quot;Our aim is to revolutionize businesses through cutting-edge IT solutions. We strive to empower
               organizations with innovative technologies, fostering growth, efficiency, and sustained success.&quot;
@@ -34,7 +34,7 @@ const About = () => {
           </div>
 
           <div className="flex flex-col space-y-2">
-            <h3 className="text-[31.87px] text-[#4328EB]">Mission</h3>
+            <h3 className="text-[31.87px] text-primary2">Mission</h3>
             <p className="text-sm">
             &quot;Our mission is to be a trusted IT partner, delivering exceptional solutions that align with our clients&apos;
               unique needs. We are dedicated to driving digital transformation, enhancing productivity.&quot;
@@ -42,7 +42,7 @@ const About = () => {
           </div>
 
           <div className="flex flex-col space-y-2">
-            <h3 className="text-[31.87px] text-[#4328EB]">Progress</h3>
+            <h3 className="text-[31.87px] text-primary2">Progress</h3>
             <p className="text-sm">
             &quot;Driven by a commitment to excellence, LEADFUME has consistently achieved milestones in providing
               top-notch IT services. Our progress is marked by successful implementations, satisfied clients.&quot;
@@ -53,7 +53,7 @@ const About = () => {
 
       {/* Milestones section */}
       <div className="mt-20">
-        <h2 className="text-[#4328EB] text-5xl mb-4">Milestones</h2>
+        <h2 className="text-primary2 text-5xl mb-4">Milestones</h2>
         <p className="mb-8">
         &quot;At LEADFUME, Milestones Mark Our Success, Representing Achievements, Growth, And Our Unwavering
           Commitment To Excellence.&quot;
