@@ -1,5 +1,16 @@
 import React from 'react'
 import { SearchIcon } from 'lucide-react'
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard | Leadfume",
+  description: "Manage your leads and track your lead generation metrics in one place.",
+  robots: {
+    index: false,
+    follow: false,
+  }
+};
+
 const Dashboard = () => {
   return (
     <div className='h-full w-full flex justify-center items-center'>

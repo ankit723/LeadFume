@@ -1,4 +1,14 @@
 import { SignIn } from "@clerk/nextjs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign In | Leadfume",
+  description: "Sign in to your Leadfume account to manage your leads and generate new business opportunities.",
+  robots: {
+    index: false,
+    follow: true,
+  }
+};
 
 export default function Page() {
   return (
