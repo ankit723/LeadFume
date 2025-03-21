@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/public/logo.png";
 import { SendIcon } from "lucide-react";
-import ClientDashboardItems from "../components/dashboard/ClientDashboardItems";
+import ClientDashboardItems from "@/app/components/dashboard/ClientDashboardItems";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { Button } from "@/components/ui/button";
-import ClientSearchBar from "../components/dashboard/ClientSearchBar";
-import MobileSidebar from "../components/dashboard/MobileSidebar";
-import ClientUserButton from "../components/dashboard/ClientUserButton";
+import ClientSearchBar from "@/app/components/dashboard/ClientSearchBar";
+import MobileSidebar from "@/app/components/dashboard/MobileSidebar";
+import ClientUserButton from "@/app/components/dashboard/ClientUserButton";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
 

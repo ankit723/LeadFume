@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import NotFoundComponent from "./not-found-component";
+import NotFound from "../not-found";
 
 export const metadata: Metadata = {
   title: "Page Not Found | Leadfume",
@@ -10,6 +10,6 @@ export const metadata: Metadata = {
   }
 };
 
-export default function NotFound() {
-  return <NotFoundComponent />;
+export default function NotFoundPage() {
+  return <NotFound />;
 } 

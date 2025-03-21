@@ -1,0 +1,18 @@
+# Leadfume Robots.txt
+User-agent: *
+Allow: /
+Disallow: /sign-in/
+Disallow: /sign-up/
+Disallow: /(protected)/
+Disallow: /api/
+
+# Specific bot adjustments
+User-agent: Googlebot
+Allow: /
+Disallow: /sign-in/
+Disallow: /sign-up/
+Disallow: /(protected)/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://leadfume.com/sitemap.xml
