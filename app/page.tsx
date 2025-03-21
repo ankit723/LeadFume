@@ -6,6 +6,20 @@ import Nav from "./components/home/Nav";
 import OverView from "./components/home/OverView";
 import Questions from "./components/home/Questions";
 import Testimonials from "./components/home/Testimonial";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Leadfume - AI-Powered Lead Generation Platform",
+  description: "Generate high-quality sales leads with Leadfume's advanced AI platform. Streamline your lead generation process and boost your sales conversions.",
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: "Leadfume - AI-Powered Lead Generation Platform",
+    description: "Generate high-quality sales leads with Leadfume's advanced AI platform. Streamline your lead generation process and boost your sales conversions.",
+    url: '/',
+  },
+};
 
 //one click google sign in
 export default function Home() {

@@ -1,4 +1,14 @@
 import { SignUp } from "@clerk/nextjs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign Up | Leadfume",
+  description: "Create a Leadfume account and start generating high-quality sales leads today.",
+  robots: {
+    index: false,
+    follow: true,
+  }
+};
 
 export default function Page() {
   return (
