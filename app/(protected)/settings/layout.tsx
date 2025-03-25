@@ -3,12 +3,10 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import SettingsTabs from "@/app/components/settingsTabs"
 import { Separator } from "@/components/ui/separator"
-import { ChevronRight, CreditCard, FileText, Home, Settings, User, HelpCircle, Book, Mail, BellRing, SearchIcon, LogOut, Globe } from "lucide-react"
-import Link from "next/link"
+import { ChevronRight, CreditCard, FileText, Home, Settings, User, HelpCircle, Book, Mail, BellRing, LogOut } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/ui/themeToggle"
 import { Button } from "@/components/ui/button"
-import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import { 
@@ -19,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import Link from "next/link"
 
 // This is now a client component
 const Layout = ({ children }: { children: React.ReactNode }) => {
