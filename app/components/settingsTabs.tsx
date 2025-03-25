@@ -1,9 +1,9 @@
 'use client'
 
 import { usePathname } from "next/navigation"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
-import { User, FileText, CreditCard, Globe } from "lucide-react"
+import { User, FileText, CreditCard } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 
