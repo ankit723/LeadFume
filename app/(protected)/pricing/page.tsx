@@ -3,44 +3,37 @@ const PricingPage = () => {
   const pricingTiers = [
     {
       name: 'Basic',
-      price: '14.99',
-      features: [
-        { name: 'Free Setup', enabled: true },
-        { name: 'Bandwidth Limit 10 GB', enabled: true },
-        { name: '20 User Connection', enabled: true },
-        { name: 'Analytics Report', enabled: false },
-        { name: 'Public API Access', enabled: false },
-        { name: 'Plugins Integration', enabled: false },
-        { name: 'Custom Content Management', enabled: false },
-      ],
+      monthlyCredits: 10000,
+      annualCredits: 120000,
+      monthlyPriceUSD: 49,
+      annualPriceUSD: 588,
+      discount: '10%',
     },
     {
-      name: 'Standard',
-      price: '49.99',
-      features: [
-        { name: 'Free Setup', enabled: true },
-        { name: 'Bandwidth Limit 10 GB', enabled: true },
-        { name: '20 User Connection', enabled: true },
-        { name: 'Analytics Report', enabled: true },
-        { name: 'Public API Access', enabled: true },
-        { name: 'Plugins Integration', enabled: false },
-        { name: 'Custom Content Management', enabled: false },
-      ],
+      name: 'Starter',
+      monthlyCredits: 20000,
+      annualCredits: 240000,
+      monthlyPriceUSD: 99,
+      annualPriceUSD: 1188,
+      discount: '15%',
     },
     {
-      name: 'Premium',
-      price: '89.99',
-      features: [
-        { name: 'Free Setup', enabled: true },
-        { name: 'Bandwidth Limit 10 GB', enabled: true },
-        { name: '20 User Connection', enabled: true },
-        { name: 'Analytics Report', enabled: true },
-        { name: 'Public API Access', enabled: true },
-        { name: 'Plugins Integration', enabled: true },
-        { name: 'Custom Content Management', enabled: true },
-      ],
+      name: 'Growth',
+      monthlyCredits: 50000,
+      annualCredits: 600000,
+      monthlyPriceUSD: 199,
+      annualPriceUSD: 2388,
+      discount: '20%',
     },
-  ]
+    {
+      name: 'Scale',
+      monthlyCredits: 100000,
+      annualCredits: 1200000,
+      monthlyPriceUSD: 299,
+      annualPriceUSD: 3588,
+      discount: '25%',
+    },
+  ];
 
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-150px)]">
@@ -60,20 +53,13 @@ const PricingPage = () => {
             <h3 className="text-xl font-semibold mb-4">{tier.name}</h3>
             <div className="flex items-baseline mb-4">
               <span className="text-yellow-400 text-2xl font-bold">$</span>
-              <span className="text-4xl font-bold">{tier.price}</span>
+              <span className="text-4xl font-bold">{tier.monthlyPriceUSD}</span>
             </div>
             <p className="text-gray-600 mb-6">Monthly Charge</p>
             
             <div className="space-y-4 flex-grow">
-              {tier.features.map((feature) => (
-                <div
-                  key={feature.name}
-                  className={`flex items-center space-x-2 ${
-                    feature.enabled ? 'text-black' : 'text-gray-400'
-                  }`}
-                >
-                  {feature.enabled && (
-                    <svg
+              <div className="flex items-center">
+              <svg
                       className="w-4 h-4 text-green-500"
                       fill="currentColor"
                       viewBox="0 0 20 20"
@@ -84,12 +70,52 @@ const PricingPage = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                  )}
-                  <span>{feature.name}</span>
-                </div>
-              ))}
-            </div>
-
+                    <p>Monthly Credits: {tier.monthlyCredits.toLocaleString()}</p>
+              </div>
+              <div className="flex items-center">
+              <svg
+                      className="w-4 h-4 text-green-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <p>Annual Credits: {tier.annualCredits.toLocaleString()}</p>
+              </div>
+              <div className="flex items-center">
+              <svg
+                      className="w-4 h-4 text-green-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <p>Annual Price (Before Discount): ${tier.annualPriceUSD}</p>
+              </div>
+              <div className="flex items-center">
+              <svg
+                      className="w-4 h-4 text-green-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <p>Discount: {tier.discount}</p>
+                    </div>
+              </div>
+                                   
             <div className="mt-8 space-y-4">
               <button
                 className={`w-full py-3 px-4 rounded-full font-medium transition-all duration-200 hover:transform hover:scale-105 ${
@@ -108,7 +134,7 @@ const PricingPage = () => {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default PricingPage
+export default PricingPage;
