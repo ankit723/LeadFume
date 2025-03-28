@@ -43,6 +43,8 @@ export async function createUser(data: CreateUserData) {
             phone: data.phone,
             dateOfBirth: data.dateOfBirth,
             gender: data.gender,
+            createdAt: new Date(),
+            updatedAt: new Date(),
         },
     });
     return user;
