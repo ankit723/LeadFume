@@ -10,7 +10,7 @@ interface FeatureCardProps {
   description: string
   fullWidth?: boolean
   hasConsultingButton?: boolean
-  excludeSpecialStyling?: boolean // New prop to exclude special styling
+  excludeSpecialStyling?: boolean
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
@@ -19,7 +19,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   description,
   fullWidth = false,
   hasConsultingButton = false,
-  excludeSpecialStyling = false, // Default to false
+  excludeSpecialStyling = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isButtonHovered, setIsButtonHovered] = useState(false)
@@ -30,7 +30,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         fullWidth ? "col-span-2" : "col-span-1"
       }`}
     >
-      {/* Special corner shape */}
       {!excludeSpecialStyling && (
         <div
           className="absolute top-0 right-0 overflow-hidden"
@@ -44,7 +43,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         </div>
       )}
 
-      {/* Arrow button with hover effect */}
       {!excludeSpecialStyling && (
         <div
           className={`absolute -top-1 right-0 rounded-full w-[60px] h-[60px] flex items-center justify-center transition-colors duration-300 ease-in-out cursor-pointer ${
@@ -68,7 +66,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       {hasConsultingButton && (
         <div className="mt-6">
           <button
-            className="bg-white text-purple-600 hover:bg-white/90 rounded-full px-7 py-2.5 text-xs sm:text-sm font-medium relative"
+            className="bg-white cursor-pointer text-purple-600 hover:bg-white/90 rounded-full px-7 py-2.5 text-xs sm:text-sm font-medium relative"
             onMouseEnter={() => setIsButtonHovered(true)}
             onMouseLeave={() => setIsButtonHovered(false)}
           >
@@ -76,7 +74,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
             <div className="absolute sm:-right-1 -right-2 sm:top-1 top-1 bg-black rounded-full p-2">
               <ArrowUpRight
                 size={14}
-                className={`text-white transition-transform duration-300 ease-in-out ${
+                className={`text-white cursor-pointer transition-transform duration-300 ease-in-out ${
                   isButtonHovered ? "rotate-90" : "rotate-45"
                 }`}
               />
@@ -91,9 +89,9 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 const ElevateComponent = () => {
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl md:text-5xl font-bold text-primary2 mb-3">Elevate Your Brand Digitally</h1>
+      <h1 className="text-4xl md:text-5xl font-bold text-primary2 mb-3">Elevate Your Lead Generation</h1>
       <p className="text-gray-600 mb-6 max-w-3xl">
-        Our tailored solutions empower your online presence, ensuring growth and success in a digitized landscape.
+        LeadFume’s AI-driven, real-time lead generation empowers your sales team with fresh, verified leads tailored to your business needs.
       </p>
 
       <hr className="border-yellow-300 border-t-2 mb-10" />
@@ -102,77 +100,77 @@ const ElevateComponent = () => {
         {/* Card 1 */}
         <FeatureCard
           number="01"
-          title="Expansive Database"
-          description="310 million+ contact records, with fresh data added daily."
+          title="Real-Time Data Collection"
+          description="LeadFume crawls over 1 million web pages per second to deliver the most recent and relevant leads, ensuring you never work with outdated data."
         />
 
         {/* Card 2 */}
         <FeatureCard
           number="02"
-          title="Real-Time Data Optimization"
-          description="Dynamic data enrichment through cutting-edge web scraping. AI-powered algorithms & real-time verification for top-tier quality."
+          title="AI-Powered Smart Filtering"
+          description="Our AI categorizes and filters leads based on your specific criteria, delivering only the most relevant prospects for your business."
         />
 
         {/* Card 3 */}
         <FeatureCard
           number="03"
-          title="Tech Intelligence at Scale"
-          description="Track over 10,000+ technologies used by businesses and brands."
+          title="Best-in-Class Validation"
+          description="Every lead undergoes multi-step verification, checking emails, phone numbers, and social profiles for maximum accuracy."
         />
 
         {/* Card 4 */}
         <FeatureCard
           number="04"
-          title="Guaranteed Lowest Industry Pricing"
-          description="Guaranteed lowest industry pricing - the best value. It is what is the lowest rates in the market, maximizing your ROI for sales and marketing success."
+          title="Ultra-Fast Lead Retrieval"
+          description="With over 1 million pages crawled per second, LeadFume provides instant access to high-quality leads, saving you time and effort."
         />
 
         {/* Card 5 - Full Width */}
         <FeatureCard
           number="05"
-          title="The Fastest-Growing & Most Accurate Data Provider"
-          description="LeadFuze is rapidly outpacing competitors with 99% data accuracy, using its own proprietary data-building technology instead of relying on third-party sources. Expansive Database - 310 million+ contact records, with fresh data added."
+          title="100% Customizable Searches"
+          description="Refine your searches by industry, location, job title, company size, revenue, and more to find the exact prospects you need, all in real-time."
           fullWidth={true}
           hasConsultingButton={true}
-          excludeSpecialStyling={true} // Exclude special styling for this card
+          excludeSpecialStyling={true}
         />
 
         {/* Card 6 */}
         <FeatureCard
           number="06"
-          title="Email Verification Tool"
-          description="Verify emails with precision to reduce bounce rates and ensure high deliverability for your outreach."
+          title="Cost-Effective Pricing"
+          description="LeadFume offers the best pricing in the market, delivering verified, fresh leads at an affordable rate to maximize your ROI."
         />
 
         {/* Card 7 */}
         <FeatureCard
           number="07"
-          title="ABM Filters & Data Appending"
-          description="Enhance your targeting by uploading your own data (e.g., domains, company name, etc) and applying Include/Exclude criteria to build targeted lists for your highly focused outreach."
+          title="Targeted B2B Leads"
+          description="Access decision-makers and industry professionals with verified contact details, perfect for B2B sales and outreach."
         />
 
         {/* Card 8 */}
         <FeatureCard
           number="08"
-          title="AI-Powered Target Prospecting"
-          description="Simplify your prospecting process with AI. Just input your companies and watch it deliver the best leads instantly."
+          title="Instant Lead Delivery"
+          description="Get real-time, exportable leads as soon as they’re verified, allowing your team to act quickly and close deals faster."
         />
 
         {/* Card 9 */}
         <FeatureCard
           number="09"
-          title="Personalized News & Alerts"
-          description="Stay ahead with key updates on your targets, industry trends, and prospecting insights, keeping you informed for smarter decision-making."
+          title="Boost Sales Efficiency"
+          description="With accurate, up-to-date leads, your sales team can focus on converting prospects instead of chasing outdated contacts."
         />
 
         {/* Card 10 - Full Width */}
         <FeatureCard
           number="10"
-          title="Comprehensive Data Fields"
-          description="Access detailed insights, including company details, website, contact names, job titles, emails, phone numbers, location, employee count, revenue, LinkedIn profiles (company & personal), and tech stack for precise targeting."
+          title="The Future of Lead Generation"
+          description="LeadFume’s AI-driven platform eliminates stale data and guesswork, providing fresh, targeted leads on demand for businesses of all sizes."
           fullWidth={true}
           hasConsultingButton={true}
-          excludeSpecialStyling={true} // Exclude special styling for this card
+          excludeSpecialStyling={true}
         />
       </div>
     </div>

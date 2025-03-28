@@ -1,4 +1,5 @@
-"'use client"
+
+"use client"
 
 import { Button } from "@/components/ui/button"
 import { CheckIcon, ArrowRightIcon } from "lucide-react"
@@ -27,31 +28,30 @@ const GetTouch = () => {
 
         {/* Content */}
         <div className="w-full md:w-1/2 space-y-4">
-          <p className="text-primary2 font-medium">Customer Support</p>
-          <h2 className="text-3xl md:text-4xl font-bold">Get in touch with your customers</h2>
+          <p className="text-primary2 font-medium">Lead Generation</p>
+          <h2 className="text-3xl md:text-4xl font-bold">Get in touch with your prospects</h2>
           <p className="text-gray-600">
-            Stay on top of things and revamp your work process with our game-changing feature. Get a bird&apos;s eye view
-            with our customizable dashboard.
+            Revolutionize your lead generation with real-time, accurate data. LeadFume crawls over 1 million web pages per second to deliver fresh, verified leads tailored to your needs.
           </p>
 
           <div className="space-y-3 py-4">
             <div className="flex items-start gap-2">
               <CheckIcon className="text-blue-500 h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p>Lorem ipsum dolor sit amet</p>
+              <p>Real-time data collection</p>
             </div>
             <div className="flex items-start gap-2">
               <CheckIcon className="text-blue-500 h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p>Consectetur adipiscing elit</p>
+              <p>AI-powered smart filtering</p>
             </div>
             <div className="flex items-start gap-2">
               <CheckIcon className="text-blue-500 h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p>Sed do eiusmod tempor incididunt ut labore</p>
+              <p>Best-in-class data validation</p>
             </div>
           </div>
 
           <Button variant="link" className="text-primary2 p-0 flex items-center gap-2 font-medium">
             Learn More
-            <div className="bg-yellow-300 rounded-full p-1">
+            <div className="bg-yellow-300 cursor-pointer rounded-full p-1">
               <ArrowRightIcon className="h-4 w-4" />
             </div>
           </Button>
@@ -75,29 +75,28 @@ const GetTouch = () => {
 
         {/* Content */}
         <div className="w-full md:w-1/2 space-y-4">
-          <p className="text-blue-500 font-medium">Sales Monitoring</p>
-          <h2 className="text-3xl md:text-4xl font-bold">Simplify your sales monitoring</h2>
+          <p className="text-blue-500 font-medium">Lead Monitoring</p>
+          <h2 className="text-3xl md:text-4xl font-bold">Simplify your lead monitoring</h2>
           <p className="text-gray-600">
-            Stay on top of things and revamp your work process with our game-changing feature. Get a bird&apos;s eye view
-            with our customizable dashboard.
+            Stay ahead with LeadFume’s ultra-fast lead retrieval and customizable searches. Get highly targeted, verified leads instantly to boost your sales process.
           </p>
 
           <div className="space-y-3 py-4">
             <div className="flex items-start gap-2">
               <CheckIcon className="text-blue-500 h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p>Lorem ipsum dolor sit amet</p>
+              <p>Ultra-fast lead retrieval</p>
             </div>
             <div className="flex items-start gap-2">
               <CheckIcon className="text-blue-500 h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p>Consectetur adipiscing elit</p>
+              <p>100% customizable searches</p>
             </div>
             <div className="flex items-start gap-2">
               <CheckIcon className="text-blue-500 h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p>Sed do eiusmod tempor incididunt ut labore</p>
+              <p>Verified and accurate contacts</p>
             </div>
           </div>
 
-          <Button variant="link" className="text-blue-500 p-0 flex items-center gap-2 font-medium">
+          <Button variant="link" className="text-blue-500 cursor-pointer p-0 flex items-center gap-2 font-medium">
             Learn More
             <div className="bg-yellow-300 rounded-full p-1">
               <ArrowRightIcon className="h-4 w-4" />
@@ -110,4 +109,3 @@ const GetTouch = () => {
 }
 
 export default GetTouch
-

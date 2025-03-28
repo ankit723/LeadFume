@@ -12,42 +12,39 @@ interface QuestionProps {
 
 const questionsData: QuestionProps[] = [
   {
-    question: "Ut enim ad minima veniam, quis nostrum exercitationem ullam?",
+    question: "How does LeadFume collect data in real-time?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.",
+      "LeadFume uses AI-powered web crawling technology to scan over 1 million web pages per second, gathering and processing the most recent and relevant lead data tailored to your needs.",
   },
   {
-    question:
-      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit?",
+    question: "What makes LeadFume different from traditional lead generation tools?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "Unlike traditional tools that rely on outdated databases, LeadFume dynamically fetches fresh leads in real-time, ensuring accuracy and relevance without storing old data.",
   },
   {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    question: "How does LeadFume ensure the accuracy of leads?",
     answer:
-      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "LeadFume runs every contact through a multi-step verification process, validating emails, phone numbers, and cross-referencing with business databases to ensure high-quality, accurate leads.",
   },
   {
-    question:
-      "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet?",
+    question: "Can I customize my lead searches with LeadFume?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "Yes, LeadFume offers 100% customizable searches based on parameters like industry, location, job title, company size, revenue brackets, and keywords, ensuring highly targeted results.",
   },
   {
-    question: "Ut enim ad minima veniam, quis nostrum exercitationem ullam?",
+    question: "How fast does LeadFume deliver leads?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "LeadFume crawls over 1 million pages per second, providing ultra-fast lead retrieval so you get instant access to fresh, verified leads without delay.",
   },
   {
-    question:
-      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit?",
+    question: "Who can benefit from using LeadFume?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "LeadFume benefits B2B sales teams, marketing agencies, recruiters, startups, and enterprises by providing real-time, verified leads tailored to their specific goals.",
   },
   {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    question: "Is LeadFume cost-effective?",
     answer:
-      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "Yes, LeadFume offers the best pricing in the market, delivering high-quality, verified leads at an affordable rate, maximizing ROI for businesses of all sizes.",
   },
 ];
 
@@ -67,8 +64,7 @@ const Questions: FC = () => {
               Let&apos;s clarify some of your questions
             </h2>
             <p className="text-[#36485C]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore
+              Get answers about how LeadFume revolutionizes lead generation with real-time, AI-driven technology.
             </p>
           </div>
 
@@ -87,7 +83,7 @@ const Questions: FC = () => {
                 
                 {/* Smooth Icon Transition */}
                 <div
-                  className={`w-5 h-5 text-indigo-600 transform transition-transform duration-300 ${
+                  className={`w-5 h-5 text-indigo-600 cursor-pointer transform transition-transform duration-300 ${
                     isOpen ? "rotate-180" : "rotate-0"
                   }`}
                 >
@@ -150,7 +146,7 @@ const Questions: FC = () => {
                 </a>
               </p>
             </div>
-            <div className="relative w-[80%]  md:w-[40%] min-h-[500px] items-center flex justify-center">
+            <div className="relative w-[90%]  md:w-[40%] sm:min-h-[500px] items-center flex justify-center">
               <Image
                 src="/home/Images.svg"
                 alt="Team collaboration"

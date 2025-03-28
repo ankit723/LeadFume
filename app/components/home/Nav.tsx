@@ -35,7 +35,7 @@ export default async function Nav() {
 
       {/* Sign-in & Get Started - Buttons Stay Fixed */}
       <div className="flex justify-center items-center gap-3">
-      <ThemeToggle />
+      <div className="cursor-pointer"><ThemeToggle /></div>
       {!user?(
 
         <div className="flex items-center space-x-3 sm:space-x-4">

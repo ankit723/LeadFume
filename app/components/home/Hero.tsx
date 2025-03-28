@@ -26,8 +26,8 @@ export default function Hero() {
               placeholder="Your email address"
               className="p-4 bg-white dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"
             />
-          <Link href="/dashboard">
-            <Button className="p-3 py-4">
+          <Link href="/dashboard ">
+            <Button className="p-3 cursor-pointer py-4">
                 Get Started
             </Button>
           </Link>

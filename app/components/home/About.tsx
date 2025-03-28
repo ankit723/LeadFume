@@ -6,7 +6,7 @@ const About = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <h1 className="text-[55.77px] text-primary2 mt-10">About Us</h1>
+      <h1 className="text-[55.77px]  text-primary2 mt-10">About Us</h1>
       <hr className="bg-[#EED061] w-full h-[2.39px] my-3" />
 
       {/* Main content section */}
@@ -14,11 +14,9 @@ const About = () => {
         {/* Left column */}
         <div className="w-full md:w-1/2">
           <p className="text-base mb-6">
-          &quot;At LEADFUME, we are pioneers in the realm of IT solutions, dedicated to transforming businesses
-            through innovative technologies. With a relentless commitment to excellence, we specialize in custom
-            software development, cloud computing, cybersecurity, IT consulting, and managed services.&quot;
+          &quot;At LeadFume, we revolutionize lead generation with our AI-powered platform, delivering real-time, accurate, and verified leads to businesses worldwide. Our focus is on empowering sales teams with cutting-edge technology to drive growth and maximize efficiency.&quot;
           </p>
-          <Button className="bg-[#EED061] hover:bg-[#e6c64d] text-black font-medium rounded-full px-8 py-3">
+          <Button className="bg-[#EED061] hover:bg-[#e6c64d] text-black font-medium cursor-pointer rounded-full px-8 py-3">
             More about us
           </Button>
         </div>
@@ -28,24 +26,21 @@ const About = () => {
           <div className="flex flex-col space-y-2">
             <h3 className="text-[31.87px] text-primary2">Aim</h3>
             <p className="text-sm">
-            &quot;Our aim is to revolutionize businesses through cutting-edge IT solutions. We strive to empower
-              organizations with innovative technologies, fostering growth, efficiency, and sustained success.&quot;
+            &quot;Our aim is to redefine lead generation by providing businesses with fresh, targeted leads on demand, leveraging AI to enhance sales outcomes and fuel sustainable growth.&quot;
             </p>
           </div>
 
           <div className="flex flex-col space-y-2">
             <h3 className="text-[31.87px] text-primary2">Mission</h3>
             <p className="text-sm">
-            &quot;Our mission is to be a trusted IT partner, delivering exceptional solutions that align with our clients&apos;
-              unique needs. We are dedicated to driving digital transformation, enhancing productivity.&quot;
+            &quot;Our mission is to deliver an innovative, real-time lead generation solution that eliminates outdated data, ensuring our clients achieve higher conversions with verified, actionable leads.&quot;
             </p>
           </div>
 
           <div className="flex flex-col space-y-2">
             <h3 className="text-[31.87px] text-primary2">Progress</h3>
             <p className="text-sm">
-            &quot;Driven by a commitment to excellence, LEADFUME has consistently achieved milestones in providing
-              top-notch IT services. Our progress is marked by successful implementations, satisfied clients.&quot;
+              &quot;LeadFume continues to set the standard in lead generation, marked by rapid adoption, exceptional lead accuracy, and a growing base of satisfied clients across industries.&quot;
             </p>
           </div>
         </div>
@@ -55,31 +50,30 @@ const About = () => {
       <div className="mt-20">
         <h2 className="text-primary2 text-5xl mb-4">Milestones</h2>
         <p className="mb-8">
-        &quot;At LEADFUME, Milestones Mark Our Success, Representing Achievements, Growth, And Our Unwavering
-          Commitment To Excellence.&quot;
+          &quot;At LeadFume, our milestones reflect our dedication to innovation, client success, and leadership in AI-driven lead generation.&quot;
         </p>
         <hr className="bg-[#EED061] w-full h-[2.39px] my-6" />
 
         {/* Stats grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 py-8">
           <div className="flex flex-col items-center">
             <h3 className="text-4xl font-bold">+15</h3>
-            <p className="text-center text-sm mt-2">Number of Projects Completed</p>
+            <p className="text-center text-sm mt-2">Industries Served</p>
           </div>
 
           <div className="flex flex-col items-center">
             <h3 className="text-4xl font-bold">+51</h3>
-            <p className="text-center text-sm mt-2">Happy Customer</p>
+            <p className="text-center text-sm mt-2">Satisfied Clients</p>
           </div>
 
           <div className="flex flex-col items-center">
             <h3 className="text-4xl font-bold">+99%</h3>
-            <p className="text-center text-sm mt-2">Increased Customer satisfaction</p>
+            <p className="text-center text-sm mt-2">Lead Accuracy Rate</p>
           </div>
 
           <div className="flex flex-col items-center">
             <h3 className="text-4xl font-bold">+4</h3>
-            <p className="text-center text-sm mt-2">Year of Experiences</p>
+            <p className="text-center text-sm mt-2">Years of Innovation</p>
           </div>
         </div>
       </div>
@@ -88,4 +82,3 @@ const About = () => {
 }
 
 export default About
-
