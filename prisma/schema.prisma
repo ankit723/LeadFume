@@ -8,6 +8,29 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum SubscriptionDuration {
+  MONTHLY
+  YEARLY
+}
+
+model SubscriptionType {
+  id String @id @default(uuid())
+  duration SubscriptionDuration
+  price Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  subscriptions Subscriptions[]
+}
+
+model Subscriptions {
+  id String @id @default(uuid())
+  subscriptionType SubscriptionType @relation(fields: [subscriptionTypeId], references: [id])
+  subscriptionTypeId String
+  price Int
+  subscriptionStartDate DateTime
+  subscriptionRenewalDate DateTime
+  users User[]
+}
 model User {
   id           String @id @default(uuid())
   email        String @unique
@@ -17,7 +40,48 @@ model User {
   phone        String
   dateOfBirth  String
   gender       String
+  orders  Request[]
+  subscriptionId String?
+  subscription Subscriptions? @relation(fields: [subscriptionId], references: [id])
   createdAt DateTime @default(now())
-
+  updatedAt DateTime @updatedAt
 }
 
+model Employee {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  profileImage String
+  phone String
+  dateOfBirth String
+  gender String
+  dateOfJoining String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pendingOrders  Request[] @relation("PendingOrders")
+  completedOrders  Request[] @relation("CompletedOrders")
+}
+
+enum RequestStatus {
+  ORDERED
+  PROCESSING
+  DELIVERED
+  CANCELLED
+}
+
+model Request {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  status RequestStatus @default(ORDERED)
+  expectedDeliveryDate DateTime?
+  requestQueryParams Json
+  requestParameterisedURL String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  assignedEmployeeId String?
+  assignedEmployee Employee? @relation(fields: [assignedEmployeeId], references: [id], name: "PendingOrders")
+  completedEmployeeId String?
+  completedEmployee Employee? @relation(fields: [completedEmployeeId], references: [id], name: "CompletedOrders")
+}
