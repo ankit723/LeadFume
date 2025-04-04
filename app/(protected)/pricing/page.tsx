@@ -1,5 +1,10 @@
+'use client';
+
+import { useState } from 'react';
 
 const PricingPage = () => {
+  const [isAnnual, setIsAnnual] = useState(false);
+
   const pricingTiers = [
     {
       name: 'Basic',
@@ -36,8 +41,26 @@ const PricingPage = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center min-h-[calc(100vh-150px)]">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
+    <div className="flex flex-col justify-center items-center min-h-[calc(100vh-150px)]">
+      {/* Billing Toggle */}
+      <div className="mb-8 flex items-center gap-4">
+        <span className={`text-lg ${!isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>Monthly</span>
+        <button
+          onClick={() => setIsAnnual(!isAnnual)}
+          className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          <span
+            className={`${
+              isAnnual ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
+            } inline-block h-4 w-4 transform rounded-full transition-transform duration-200 ease-in-out shadow-lg`}
+          />
+        </button>
+        <span className={`text-lg ${isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+          Annually
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto relative">
         {pricingTiers.map((tier, index) => (
           <div
             key={tier.name}
@@ -53,68 +76,47 @@ const PricingPage = () => {
             <h3 className="text-xl font-semibold mb-4">{tier.name}</h3>
             <div className="flex items-baseline mb-4">
               <span className="text-yellow-400 text-2xl font-bold">$</span>
-              <span className="text-4xl font-bold">{tier.monthlyPriceUSD}</span>
+              <span className="text-4xl font-bold">
+                {isAnnual ? (tier.annualPriceUSD / 12).toFixed(0) : tier.monthlyPriceUSD}
+              </span>
             </div>
             <p className="text-gray-600 mb-6">Monthly Charge</p>
             
             <div className="space-y-4 flex-grow">
               <div className="flex items-center">
-              <svg
-                      className="w-4 h-4 text-green-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <p>Monthly Credits: {tier.monthlyCredits.toLocaleString()}</p>
+                <svg
+                  className="w-4 h-4 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <p>Credits: {isAnnual ? tier.annualCredits.toLocaleString() : tier.monthlyCredits.toLocaleString()}</p>
               </div>
-              <div className="flex items-center">
-              <svg
-                      className="w-4 h-4 text-green-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <p>Annual Credits: {tier.annualCredits.toLocaleString()}</p>
-              </div>
-              <div className="flex items-center">
-              <svg
-                      className="w-4 h-4 text-green-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <p>Annual Price (Before Discount): ${tier.annualPriceUSD}</p>
-              </div>
-              <div className="flex items-center">
-              <svg
-                      className="w-4 h-4 text-green-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <p>Discount: {tier.discount}</p>
-                    </div>
-              </div>
+              {isAnnual && (
+                <div className="flex items-center">
+                  <svg
+                    className="w-4 h-4 text-green-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <p>
+                    <span className="line-through text-gray-500">${tier.monthlyPriceUSD}/mo</span>
+                    <span className="ml-2 text-green-500">Save {tier.discount}</span>
+                  </p>
+                </div>
+              )}
+            </div>
                                    
             <div className="mt-8 space-y-4">
               <button

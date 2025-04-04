@@ -2,9 +2,9 @@ import React from 'react';
 
 const DataPolicyPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="  rounded-lg p-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">LeadFume Data Policy</h1>
           <p className="text-gray-600 mb-4">Last Modified: March 18, 2025</p>
 

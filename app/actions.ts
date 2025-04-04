@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { v4 as uuidv4 } from 'uuid';
 
+
 export async function getUser() {
 
     const { userId } = await auth();
@@ -111,3 +112,23 @@ export async function uploadImage(base64Image: string) {
         return { success: false, error: (error as Error).message };
     }
 }
+
+export async function addContactForm(data: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  message: string;
+}) {
+    const contact = await prisma.contactForm.create({
+        data: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            message: data.message
+        }
+    });
+    return contact;
+}
+

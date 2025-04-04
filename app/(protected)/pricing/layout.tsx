@@ -43,6 +43,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                             <Button variant="secondary" className="bg-primary/80 cursor-pointer hover:bg-primary/90 transition-all duration-200 hover:shadow-xl hover:shadow-primary/25">
                                 Upgrade To Pro
                             </Button>
+                            
                         </Link>
 
                         <Button 

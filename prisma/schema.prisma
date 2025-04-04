@@ -85,3 +85,15 @@ model Request {
   completedEmployeeId String?
   completedEmployee Employee? @relation(fields: [completedEmployeeId], references: [id], name: "CompletedOrders")
 }
+
+model ContactForm {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
