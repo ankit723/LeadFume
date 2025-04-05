@@ -30,7 +30,7 @@ export default async function Nav() {
         <Link href="/" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Home</Link>
         <Link href="/service" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Service</Link>
         <Link href="/contact" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Contact</Link>
-        <Link href="/help" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Help</Link>
+        <Link href="/policies" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">policies</Link>
       </div>
 
       {/* Sign-in & Get Started - Buttons Stay Fixed */}

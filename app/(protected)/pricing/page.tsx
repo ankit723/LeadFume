@@ -42,25 +42,37 @@ const PricingPage = () => {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[calc(100vh-150px)]">
-      {/* Billing Toggle */}
-      <div className="mb-8 flex items-center gap-4">
-        <span className={`text-lg ${!isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>Monthly</span>
-        <button
-          onClick={() => setIsAnnual(!isAnnual)}
-          className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          <span
-            className={`${
-              isAnnual ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
-            } inline-block h-4 w-4 transform rounded-full transition-transform duration-200 ease-in-out shadow-lg`}
-          />
-        </button>
-        <span className={`text-lg ${isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-          Annually
-        </span>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+        <p className="text-muted-foreground w-full mx-auto">
+          Choose the plan that best fits your needs. All plans include access to our 250 million contact database.
+        </p>
+        <p className="text-muted-foreground max-w-6xl mx-auto mt-2">
+          All plans allow filtering up to 100,000 leads at once per search criteria. Need more contacts export at once, or access to the entire 250 million contact database, contact us for a customized solution.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto relative">
+            {/* Billing Toggle */}
+            <div className="flex justify-center mb-8">
+        <div className="flex items-center gap-4 bg-muted p-2 rounded-lg">
+          <span className={!isAnnual ? "font-medium" : "text-muted-foreground"}>Monthly</span>
+          <button
+            onClick={() => setIsAnnual(!isAnnual)}
+            className={`relative w-12 h-6 rounded-full transition-colors ${
+              isAnnual ? "bg-primary" : "bg-muted-foreground"
+            }`}
+          >
+            <span
+              className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                isAnnual ? "translate-x-6" : ""
+              }`}
+            />
+          </button>
+          <span className={isAnnual ? "font-medium" : "text-muted-foreground"}>Annual</span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-4 justify-center items-center">
         {pricingTiers.map((tier, index) => (
           <div
             key={tier.name}
@@ -112,7 +124,7 @@ const PricingPage = () => {
                   </svg>
                   <p>
                     <span className="line-through text-gray-500">${tier.monthlyPriceUSD}/mo</span>
-                    <span className="ml-2 text-green-500">Save {tier.discount}</span>
+                    <span className="ml-2 text-green-500">${(tier.monthlyPriceUSD - (tier.monthlyPriceUSD * parseInt(tier.discount) / 100))}/mo</span>
                   </p>
                 </div>
               )}
@@ -135,6 +147,30 @@ const PricingPage = () => {
           </div>
         ))}
       </div>
+
+      {/* Data Export Timelines */}
+      <div className=" mx-auto mb-8 p-6 bg-muted/50 rounded-lg">
+        <h2 className="text-xl font-semibold mb-4">Data Export Timelines</h2>
+        <p className="text-muted-foreground mb-4">
+          We prioritize speed and accuracy in data delivery. Depending on the number of contacts requested per search criteria, here&apos;s the expected timeline:
+        </p>
+        <ul className="space-y-2">
+          <li className="flex items-start gap-2">
+            <span className="text-primary">•</span>
+            <span>Up to 100,000 contacts per search criteria at once → Leads will be export-ready within 12 hours.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-primary">•</span>
+            <span>100,000 to 1 million contacts per search criteria at once → Leads will be export-ready within 48 hours.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-primary">•</span>
+            <span>More than 1 million contacts per search criteria at once or complete 250 million records → Contact us for a custom solution.</span>
+          </li>
+        </ul>
+      </div>
+
+
     </div>
   );
 }
