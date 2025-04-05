@@ -22,9 +22,9 @@ const questionsData: QuestionProps[] = [
       "Unlike traditional tools that rely on outdated databases, LeadFume dynamically fetches fresh leads in real-time, ensuring accuracy and relevance without storing old data.",
   },
   {
-    question: "How does LeadFume ensure the accuracy of leads?",
+    question: "How does LeadFume verify data accuracy?",
     answer:
-      "LeadFume runs every contact through a multi-step verification process, validating emails, phone numbers, and cross-referencing with business databases to ensure high-quality, accurate leads.",
+      "We use AI-powered real-time verification to ensure 95% accuracy, and we replace any faulty records within 24 hours.",
   },
   {
     question: "Can I customize my lead searches with LeadFume?",
@@ -32,19 +32,34 @@ const questionsData: QuestionProps[] = [
       "Yes, LeadFume offers 100% customizable searches based on parameters like industry, location, job title, company size, revenue brackets, and keywords, ensuring highly targeted results.",
   },
   {
+    question: "How do credits work?",
+    answer:
+      "Each credit allows you to export one verified lead. Credits reset monthly based on your plan.",
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer:
+      "We accept major credit/debit cards, PayPal, and wire transfers for enterprise-level purchases.",
+  },
+  {
+    question: "Is my data safe with LeadFume?",
+    answer:
+      "Absolutely! We comply with GDPR and global data privacy laws, ensuring your data is secure and confidential.",
+  },
+  {
+    question: "Can I upgrade or downgrade my plan?",
+    answer:
+      "Yes! You can upgrade or downgrade anytime. If you upgrade, your additional credits will be available immediately.",
+  },
+  {
     question: "How fast does LeadFume deliver leads?",
     answer:
       "LeadFume crawls over 1 million pages per second, providing ultra-fast lead retrieval so you get instant access to fresh, verified leads without delay.",
   },
   {
-    question: "Who can benefit from using LeadFume?",
+    question: "How do I access the entire 250 million contact database?",
     answer:
-      "LeadFume benefits B2B sales teams, marketing agencies, recruiters, startups, and enterprises by providing real-time, verified leads tailored to their specific goals.",
-  },
-  {
-    question: "Is LeadFume cost-effective?",
-    answer:
-      "Yes, LeadFume offers the best pricing in the market, delivering high-quality, verified leads at an affordable rate, maximizing ROI for businesses of all sizes.",
+      "For bulk data acquisition, email us at info@leadfume.com for custom pricing and solutions.",
   },
 ];
 
