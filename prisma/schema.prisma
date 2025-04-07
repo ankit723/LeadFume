@@ -17,6 +17,7 @@ model SubscriptionType {
   id String @id @default(uuid())
   duration SubscriptionDuration
   price Int
+  credits Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   subscriptions Subscriptions[]
@@ -43,6 +44,7 @@ model User {
   orders  Request[]
   subscriptionId String?
   subscription Subscriptions? @relation(fields: [subscriptionId], references: [id])
+  creditsAvailable Int @default(1000)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -80,6 +82,7 @@ model Request {
   requestParameterisedURL String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  creditsNeeded Int
   assignedEmployeeId String?
   assignedEmployee Employee? @relation(fields: [assignedEmployeeId], references: [id], name: "PendingOrders")
   completedEmployeeId String?

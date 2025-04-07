@@ -121,4 +121,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  tile {
+    @apply bg-primary
+  }
 }
