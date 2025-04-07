@@ -64,17 +64,17 @@ const Footer = () => {
             <h3 className="text-md font-semibold text-black dark:text-white mb-4">Legal</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/data-policy" className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
+                <Link href="/policies/data-policy" className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
                   LeadFume Data Policy
                 </Link>
               </li>
               <li>
-                <Link href="/gdpr-compliance" className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
+                <Link href="/policies/gdpr-compliance" className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
                   LeadFume GDPR Compliance
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
+                <Link href="/policies/terms-of-service" className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
                   Terms of Service
                 </Link>
               </li>

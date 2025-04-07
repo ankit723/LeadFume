@@ -77,6 +77,41 @@ const About = () => {
           </div>
         </div>
       </div>
+
+      {/* Free Trial Section */}
+      <div className="mt-20">
+        <h2 className="text-primary2 text-5xl mb-4">Free Trial and Lead Processing</h2>
+        <p className="mb-8 text-base">
+          During your free trial, you can instantly export 5 leads from any search criteria at no cost. Our AI-powered system efficiently collects, processes, and verifies data while also performing real-time email and phone verification. This process ensures high accuracy, and for larger datasets, it may take some time to complete.
+        </p>
+      </div>
+
+      {/* Why Choose LeadFume Section */}
+      <div className="mt-20">
+        <h2 className="text-primary2 text-5xl mb-4">Why Choose LeadFume?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+          <div className=" p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold mb-2">95% Data Accuracy</h3>
+            <p className="text-gray-600">Our advanced AI engines verify and validate each contact to ensure top-notch accuracy.</p>
+          </div>
+          <div className=" p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold mb-2">Fast Processing</h3>
+            <p className="text-gray-600">Data is systematically collected, processed, and verified, reducing waiting time.</p>
+          </div>
+          <div className=" p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold mb-2">Competitive Pricing</h3>
+            <p className="text-gray-600">We provide the best rates while maintaining the highest quality in the industry.</p>
+          </div>
+          <div className=" p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold mb-2">Scalable Solutions</h3>
+            <p className="text-gray-600">Whether you need 10,000 leads or an entire 250-million-contact database, we&apos;ve got you covered.</p>
+          </div>
+          <div className=" p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold mb-2">Custom Bulk Acquisition</h3>
+            <p className="text-gray-600">Need access to an even larger dataset? Contact us at info@leadfume.com for custom pricing.</p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
