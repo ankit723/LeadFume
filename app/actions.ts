@@ -141,7 +141,7 @@ export const addRequest = async (request: Request) => {
         throw new Error("User not found");
     }
 
-    const availableCredits = user?.subscription?.subscriptionType?.credits || 0;
+    const availableCredits = user?.creditsAvailable || 0;
     if (availableCredits < request.creditsNeeded) {
         throw new Error("Insufficient credits");
     }
@@ -201,13 +201,61 @@ export const addRequest = async (request: Request) => {
     
     return createdRequest;
 }
-export async function addContactForm(data: {
+
+export const getRequests = async (userId: string) => {
+    const requests = await prisma.request.findMany({
+        where: {
+            userId: userId
+        }
+    })
+    return requests
+}
+
+export const cancelRequest = async (requestId: string) => {
+    const { userId } = await auth();
+    
+    if (!userId) {
+        throw new Error("User not authenticated");
+    }
+    
+    // Verify the request belongs to the user
+    const request = await prisma.request.findUnique({
+        where: {
+            id: requestId,
+            userId: userId
+        }
+    });
+    
+    if (!request) {
+        throw new Error("Request not found or does not belong to user");
+    }
+    
+    // Only allow cancellation if request is in ORDERED state
+    if (request.status !== "ORDERED") {
+        throw new Error("Request cannot be cancelled at this stage");
+    }
+    
+    // Update the request status to CANCELLED
+    const updatedRequest = await prisma.request.update({
+        where: {
+            id: requestId
+        },
+        data: {
+            status: "CANCELLED",
+            updatedAt: new Date()
+        }
+    });
+    
+    return updatedRequest;
+}
+
+export const addContactForm = async (data: {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   message: string;
-}) {
+}) => {
     const contact = await prisma.contactForm.create({
         data: {
             firstName: data.firstName,

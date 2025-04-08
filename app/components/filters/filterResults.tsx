@@ -2,10 +2,56 @@
 import { Link } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
+import { useSearchParams, useParams, useRouter } from 'next/navigation'
+import { Request, RequestStatus, User } from '@prisma/client'
+import { v4 as uuidv4 } from 'uuid'
+import { addRequest } from '@/app/actions'
+import { toast } from 'sonner'
 
-const ConfirmRequestModal = ({setIsModalOpen}:{setIsModalOpen: (isModalOpen: boolean) => void}) => {
+const ConfirmRequestModal = ({setIsModalOpen, user}:{setIsModalOpen: (isModalOpen: boolean) => void, user: User}) => {
+    //get the dynamic search params from the url 
+    const searchParams = useSearchParams()
+    const params = useParams()
+    const router = useRouter()
 
-    const handleRequest = () => {
+    const allParams = Array.from(searchParams.entries()).reduce((acc, [key, value]) => {
+      acc[key] = value
+      return acc
+    }, {} as Record<string, string>)
+    
+    // Convert params object to URL query string
+    const paramsString = Object.entries(allParams)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&')
+    
+    // Log all parameters to see what's available
+    useEffect(() => {
+      console.log('app.apolo.io/#/people?page=1&' + paramsString)
+      
+    }, [allParams, paramsString])
+    
+    const handleRequest = async () => {
+        const request:Request = {
+            id: uuidv4(), // Generate a unique ID for the request
+            userId: user?.id,
+            status: RequestStatus.ORDERED,
+            expectedDeliveryDate: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),
+            requestQueryParams: allParams,
+            requestParameterisedURL:`app.apollo.io/#/${params.category}?page=1&sortAscending=false&sortByField=%5Bnone%5D&` + paramsString,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            creditsNeeded: 100,
+            assignedEmployeeId: null,
+            completedEmployeeId: null,
+        }
+        
+        const order = await addRequest(request)
+        if(order){
+            toast.success('Request placed successfully!')
+            router.push('/settings/requests')
+        }else{
+            toast.error('Request failed! Please try again later.')
+        }
         setIsModalOpen(false)
     }
 
@@ -28,12 +74,12 @@ const ConfirmRequestModal = ({setIsModalOpen}:{setIsModalOpen: (isModalOpen: boo
     )
 }
 
-const FilterResults = ({isUserPremium}:{isUserPremium:boolean}) => {
+const FilterResults = ({isUserPremium, user}:{isUserPremium:boolean, user: User|null}) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     if(isUserPremium){
         return (
             <div className="w-full h-full flex flex-col gap-4 justify-center items-center">
-                {isModalOpen && <ConfirmRequestModal setIsModalOpen={setIsModalOpen} />}
+                {isModalOpen && user && <ConfirmRequestModal setIsModalOpen={setIsModalOpen} user={user} />}
                 <div className="w-full h-full flex flex-col gap-4 justify-center items-center">
                     <h1 className="text-2xl font-bold">Make sure you select correct filters to get the best results !</h1> 
                     <p className="text-sm text-gray-500">

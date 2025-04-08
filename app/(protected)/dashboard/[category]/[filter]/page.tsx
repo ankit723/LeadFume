@@ -23,7 +23,7 @@ const page = async ({params}:PageProps) => {
       <div className="flex-1 flex flex-wrap gap-4 mx-4">
         {filterComponent && <DynamicFilter />}  
         <div className="flex-1 flex flex-col gap-4 mx-4"> 
-          <FilterResults isUserPremium={!user?.subscription?true:false} />
+          <FilterResults isUserPremium={!user?.subscription?true:false} user={user}/>
         </div>
       </div>
         

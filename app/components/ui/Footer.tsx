@@ -110,7 +110,7 @@ const Footer = () => {
             </p>
             <div className="mt-4 md:mt-0">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Designed and developed with ❤️
+                Designed and developed with ❤️ by <Link href="https://github.com/ankit723" target="_blank" rel="noopener noreferrer" className="text-primary dark:text-primary">Ankit Biswas</Link>
               </p>
             </div>
           </div>
