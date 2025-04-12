@@ -17,34 +17,77 @@ const EmailStatusFilter = () => {
   const searchParams = useSearchParams()
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(true)
 
-  // Create URLSearchParams object for manipulation
-  const createQueryString = (params: Record<string, string | boolean>) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    
-    Object.entries(params).forEach(([key, value]) => {
-      if (value === false || value === '') {
-        newSearchParams.delete(key)
-      } else {
-        newSearchParams.set(key, String(value))
-      }
-    })
-    
-    return newSearchParams.toString()
+  // Helper function to handle square brackets in URL params
+  const getAllParams = (name: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    // Convert the URLSearchParams to a string and replace encoded brackets
+    const paramsString = params.toString().replace(/%5B%5D/g, '[]')
+    return new URLSearchParams(paramsString).getAll(name)
   }
 
-  // Get current filter values from URL
+  const getParam = (name: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    const paramsString = params.toString().replace(/%5B%5D/g, '[]')
+    return new URLSearchParams(paramsString).get(name)
+  }
+
+  // Exact mapping of filter keys to the specified parameter values
+  const filterMap = {
+    safeToSend: 'verified',
+    safeToCaution: 'unverified',
+    doNotSendUpdate: 'new_data_available',
+    doNotSendUnusable: 'unavailable',
+  }
+
+  // Get current filter states from URL parameters
   const currentFilters = {
-    safeToSend: searchParams.get('safeToSend') === 'true',
-    safeToCaution: searchParams.get('safeToCaution') === 'true',
-    doNotSendUpdate: searchParams.get('doNotSendUpdate') === 'true',
-    doNotSendUnusable: searchParams.get('doNotSendUnusable') === 'true',
-    includeCatchAll: searchParams.get('includeCatchAll') === 'true',
-    showUserManaged: searchParams.get('showUserManaged') === 'true',
+    safeToSend: getAllParams('contactEmailStatusV2[]').includes('verified'),
+    safeToCaution: getAllParams('contactEmailStatusV2[]').includes('unverified'),
+    doNotSendUpdate: getAllParams('contactEmailStatusV2[]').includes('new_data_available'),
+    doNotSendUnusable: getAllParams('contactEmailStatusV2[]').includes('unavailable'),
+    includeCatchAll: getParam('includeCatchAll') === 'true',
+    showUserManaged: getParam('showUserManaged') === 'true',
   }
 
-  // Handle filter changes
+  // Function to update query string with exact parameter format
+  const updateQueryString = (key: string, checked: boolean) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    const currentValues = getAllParams('contactEmailStatusV2[]')
+    
+    // Handle email status filters
+    if (key in filterMap) {
+      const paramValue = filterMap[key as keyof typeof filterMap]
+      
+      // Clear existing contactEmailStatusV2[] parameters
+      newSearchParams.delete('contactEmailStatusV2[]')
+      
+      // Update the array with the exact values
+      const updatedValues = currentValues.filter(val => val !== paramValue)
+      if (checked) {
+        updatedValues.push(paramValue)
+      }
+      
+      // Rebuild the contactEmailStatusV2[] array
+      updatedValues.forEach(value => newSearchParams.append('contactEmailStatusV2[]', value))
+    } 
+    // Handle advanced filters separately
+    else if (key === 'includeCatchAll' || key === 'showUserManaged') {
+      if (checked) {
+        newSearchParams.set(key, 'true')
+      } else {
+        newSearchParams.delete(key)
+      }
+    }
+
+    // Convert to string and replace encoded brackets
+    let queryString = newSearchParams.toString()
+    queryString = queryString.replace(/%5B%5D/g, '[]')
+    return queryString
+  }
+
+  // Handle filter changes and update URL
   const handleFilterChange = (key: string, value: boolean) => {
-    const queryString = createQueryString({ [key]: value })
+    const queryString = updateQueryString(key, value)
     router.push(`${pathname}?${queryString}`)
   }
 
