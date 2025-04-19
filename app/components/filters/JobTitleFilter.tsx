@@ -1,8 +1,9 @@
 "use client";
 
+import React from "react";
 import { useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { ChevronDown, User2, Info,  Plus } from "lucide-react";
+import { ChevronDown, User2, Info, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,29 +16,33 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 const JobTitleFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(true);
-  const [jobTitleSearchValue, setJobTitleSearchValue] = useState("");
-  const [excludeTitleSearchValue, setExcludeTitleSearchValue] = useState("");
-  const [pastJobTitleSearchValue, setPastJobTitleSearchValue] = useState("");
   const [departmentSearchValue, setDepartmentSearchValue] = useState("");
-  const [jobTitleDropdownOpen, setJobTitleDropdownOpen] = useState(false);
-  const [excludeTitleDropdownOpen, setExcludeTitleDropdownOpen] = useState(false);
-  const [pastJobTitleDropdownOpen, setPastJobTitleDropdownOpen] = useState(false);
   const [managementLevelOpen, setManagementLevelOpen] = useState(false);
   const [departmentsOpen, setDepartmentsOpen] = useState(false);
 
+  // Job title filter states
+  const [personTitles, setPersonTitles] = useState<string[]>([]);
+  const [personNotTitles, setPersonNotTitles] = useState<string[]>([]);
+  const [personTitlesPast, setPersonTitlesPast] = useState<string[]>([]);
+  const [personNotTitlesPast, setPersonNotTitlesPast] = useState<string[]>([]);
+  const [isPersonTitlesDropdownOpen, setIsPersonTitlesDropdownOpen] = useState(false);
+  const [isPersonNotTitlesDropdownOpen, setIsPersonNotTitlesDropdownOpen] = useState(false);
+  const [isPersonTitlesPastDropdownOpen, setIsPersonTitlesPastDropdownOpen] = useState(false);
+  const [isPersonNotTitlesPastDropdownOpen, setIsPersonNotTitlesPastDropdownOpen] = useState(false);
+  const [jobTitleFilterType, setJobTitleFilterType] = useState<"isAny" | "isNotAny" | "both">(
+    "isAny"
+  );
+  const [includePastIsAny, setIncludePastIsAny] = useState(false);
+  const [includePastIsNotAny, setIncludePastIsNotAny] = useState(false);
+
   // Sample data
-  const jobTitles = ["manager", "project manager", "teacher", "owner", "student", "director"];
+  const allOptions = ["manager", "student", "developer", "designer", "intern"];
   const managementLevels = [
     { label: "Owner", count: 0 },
     { label: "Founder", count: 0 },
@@ -67,70 +72,126 @@ const JobTitleFilter = () => {
   // URL manipulation function
   const createQueryString = (params: Record<string, string | boolean | string[]>) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
+
     Object.entries(params).forEach(([key, value]) => {
+      newSearchParams.delete(key);
       if (value === false || value === "" || (Array.isArray(value) && value.length === 0)) {
-        newSearchParams.delete(key);
+        // Do nothing, as delete was already called
+      } else if (Array.isArray(value)) {
+        value.forEach((item) => {
+          newSearchParams.append(key, encodeURIComponent(item));
+        });
       } else {
-        newSearchParams.set(key, Array.isArray(value) ? value.join(",") : String(value));
+        newSearchParams.set(key, String(value));
       }
     });
-    return newSearchParams.toString();
+
+    let queryString = newSearchParams.toString();
+    queryString = queryString.replace(/%5B%5D/g, "[]");
+    return queryString;
   };
 
   // Current filters from URL
   const currentFilters = {
-    jobTitleType: searchParams.get("jobTitleType") || "isAnyOf",
-    jobTitle: searchParams.get("jobTitle") || "",
-    excludeJobTitle: searchParams.get("excludeJobTitle") || "",
-    includePastJobTitles: searchParams.get("includePastJobTitles") === "true",
-    pastJobTitle: searchParams.get("pastJobTitle") || "",
+    personTitles: searchParams.getAll("personTitles[]") || [],
+    personNotTitles: searchParams.getAll("personNotTitles[]") || [],
+    personTitlesPast: searchParams.getAll("personTitlesPast[]") || [],
+    personNotTitlesPast: searchParams.getAll("personNotTitlesPast[]") || [],
     knownStatus: searchParams.get("knownStatus") || "",
-    managementLevels: searchParams.get("managementLevels")?.split(",") || [],
-    departments: searchParams.get("departments")?.split(",") || [],
+    existFields: searchParams.getAll("existFields[]") || [],
+    notExistFields: searchParams.getAll("notExistFields[]") || [],
+    personSeniorities: searchParams.getAll("personSeniorities[]") || [],
+    personDepartmentOrSubdepartments:
+      searchParams.getAll("personDepartmentOrSubdepartments[]") || [],
   };
-
-  // Count active filters
-  // const getActiveFilterCount = () => {
-  //   let count = 0;
-  //   if (currentFilters.jobTitle) count++;
-  //   if (currentFilters.excludeJobTitle) count++;
-  //   if (currentFilters.pastJobTitle) count++;
-  //   if (currentFilters.knownStatus) count++;
-  //   if (currentFilters.managementLevels.length > 0) count++;
-  //   if (currentFilters.departments.length > 0) count++;
-  //   return count;
-  // };
 
   // Handle filter changes
   const handleFilterChange = (key: string, value: string | boolean | string[]) => {
     const queryString = createQueryString({ [key]: value });
-    router.push(`${pathname}?${queryString}`);
+    router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
   };
 
   // Handle management level changes
-  const handleManagementLevelChange = (level: string, checked: boolean) => {
-    const newLevels = checked
-      ? [...currentFilters.managementLevels, level]
-      : currentFilters.managementLevels.filter((l) => l !== level);
-    handleFilterChange("managementLevels", newLevels);
+  const handleManagementLevelChange = (level: string) => {
+    const isCurrentlyChecked = currentFilters.personSeniorities.includes(level);
+    const newLevels = isCurrentlyChecked
+      ? currentFilters.personSeniorities.filter((l) => l !== level)
+      : [...currentFilters.personSeniorities, level];
+    handleFilterChange("personSeniorities[]", newLevels);
   };
 
   // Handle department changes
-  const handleDepartmentChange = (department: string, checked: boolean) => {
-    const newDepartments = checked
-      ? [...currentFilters.departments, department]
-      : currentFilters.departments.filter((d) => d !== department);
-    handleFilterChange("departments", newDepartments);
+  const handleDepartmentChange = (department: string) => {
+    const isCurrentlyChecked = currentFilters.personDepartmentOrSubdepartments.includes(department);
+    const newDepartments = isCurrentlyChecked
+      ? currentFilters.personDepartmentOrSubdepartments.filter((d) => d !== department)
+      : [...currentFilters.personDepartmentOrSubdepartments, department];
+    handleFilterChange("personDepartmentOrSubdepartments[]", newDepartments);
   };
 
-  // Clear all filters
-  // const clearAllFilters = () => {
-  //   router.push(pathname);
-  // };
+  // Handle job title type change
+  const handleIsNotAnyChange = (checked: boolean) => {
+    if (checked) {
+      setJobTitleFilterType(
+        personTitles.length > 0 || personTitlesPast.length > 0 ? "both" : "isNotAny"
+      );
+    } else {
+      setJobTitleFilterType("isAny");
+      handleFilterChange("personNotTitles[]", []);
+      handleFilterChange("personNotTitlesPast[]", []);
+      setPersonNotTitles([]);
+      setPersonNotTitlesPast([]);
+      setIncludePastIsNotAny(false);
+    }
+  };
 
-  const filteredJobTitles = jobTitles.filter((title) =>
-    title.toLowerCase().includes(jobTitleSearchValue.toLowerCase())
-  );
+  const handleIsAnyChange = () => {
+    setJobTitleFilterType(
+      personNotTitles.length > 0 || personNotTitlesPast.length > 0 ? "both" : "isAny"
+    );
+  };
+
+  // Dropdown toggle functions
+  const toggleOption = (
+    option: string,
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    setSelected((prev) =>
+      prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]
+    );
+  };
+
+  const removeOption = (
+    option: string,
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>,
+    filterKey: string
+  ) => {
+    const newSelected = (
+      filterKey === "personTitles[]"
+        ? personTitles
+        : filterKey === "personNotTitles[]"
+        ? personNotTitles
+        : filterKey === "personTitlesPast[]"
+        ? personTitlesPast
+        : personNotTitlesPast
+    ).filter((item) => item !== option);
+    setSelected(newSelected);
+    handleFilterChange(filterKey, newSelected);
+    if (
+      filterKey === "personNotTitles[]" &&
+      newSelected.length === 0 &&
+      personNotTitlesPast.length === 0
+    ) {
+      setJobTitleFilterType("isAny");
+    } else if (
+      filterKey === "personNotTitlesPast[]" &&
+      newSelected.length === 0 &&
+      personNotTitles.length === 0
+    ) {
+      setJobTitleFilterType("isAny");
+    }
+  };
+
   const filteredDepartments = departments.filter((dept) =>
     dept.label.toLowerCase().includes(departmentSearchValue.toLowerCase())
   );
@@ -142,301 +203,453 @@ const JobTitleFilter = () => {
           <h4 className="text-base text-center font-semibold bg-primary dark:bg-primary/70 text-black dark:text-white p-2 rounded-md shadow-sm flex-1">
             Job Titles
           </h4>
-          {/* <div className="flex items-center gap-2">
-            {getActiveFilterCount() > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs text-gray-600 dark:text-gray-400"
-                onClick={clearAllFilters}
-              >
-                <X className="h-3 w-3 mr-1" />
-                {getActiveFilterCount()}
-              </Button>
-            )}
-            <CollapsibleTrigger className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
-              <ChevronDown
-                className={cn(
-                  "h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-300",
-                  isOpen && "transform rotate-180"
-                )}
-              />
-            </CollapsibleTrigger>
-          </div> */}
         </div>
 
-        <CollapsibleContent className="">
-          {/* Job Title Type Section */}
-          <div className="space-y-3">
-            <RadioGroup
-              defaultValue={currentFilters.jobTitleType}
-              onValueChange={(value) => handleFilterChange("jobTitleType", value)}
-            >
-              {/* Is Any Of */}
-              <div className="">
-                <div className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
-                  <RadioGroupItem value="isAnyOf" id="isAnyOf" />
-                  <Label htmlFor="isAnyOf" className="text-sm font-medium dark:text-gray-200">
-                    Is any of
-                  </Label>
+        <CollapsibleContent>
+          <div className="space-y-2">
+            {/* Is Any Of */}
+            <div>
+              <div className="rounded p-4 w-full">
+                <div className="flex gap-2">
+                  <input
+                    type="radio"
+                    checked={jobTitleFilterType === "isAny" || jobTitleFilterType === "both"}
+                    onChange={handleIsAnyChange}
+                  />
+                  <label className="font-medium text-sm">Is any of</label>
                 </div>
-                <Popover open={jobTitleDropdownOpen} onOpenChange={setJobTitleDropdownOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-[90%] justify-between text-xs bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 ml-3 text-gray-600 dark:text-gray-400"
-                    >
-                      {currentFilters.jobTitle || "Search for a job title"}
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[260px]">
-                    <Input
-                      placeholder="Search for a job title"
-                      value={jobTitleSearchValue}
-                      onChange={(e) => setJobTitleSearchValue(e.target.value)}
-                      className=""
-                    />
-                    <div className="max-h-[200px] overflow-y-auto">
-                      {filteredJobTitles.map((title) => (
+                <div className="relative">
+                  <div
+                    className="flex flex-wrap gap-1 p-2 border rounded min-h-[40px] cursor-pointer"
+                    onClick={() => setIsPersonTitlesDropdownOpen(!isPersonTitlesDropdownOpen)}
+                  >
+                    {personTitles.map((option) => (
+                      <span
+                        key={option}
+                        className="bg-gray-200 text-sm px-2 py-1 rounded flex items-center gap-1"
+                      >
+                        {option}
+                        <X
+                          size={12}
+                          className="cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeOption(option, setPersonTitles, "personTitles[]");
+                          }}
+                        />
+                      </span>
+                    ))}
+                    <ChevronDown className="ml-auto" size={16} />
+                  </div>
+                  {isPersonTitlesDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 bg-white shadow rounded mt-1 z-10 max-h-40 overflow-y-auto">
+                      {allOptions.map((option) => (
                         <div
-                          key={title}
-                          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                          key={option}
+                          className="p-2 hover:bg-gray-100 cursor-pointer"
                           onClick={() => {
-                            handleFilterChange("jobTitle", title);
-                            setJobTitleDropdownOpen(false);
+                            toggleOption(option, setPersonTitles);
+                            handleFilterChange(
+                              "personTitles[]",
+                              personTitles.includes(option)
+                                ? personTitles.filter((item) => item !== option)
+                                : [...personTitles, option]
+                            );
                           }}
                         >
-                          {title}
+                          <input
+                            type="checkbox"
+                            checked={personTitles.includes(option)}
+                            readOnly
+                            className="mr-2"
+                          />
+                          {option}
                         </div>
                       ))}
                     </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              {/* Is Not Any Of */}
-              <div className="">
-                <div className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
-                  <RadioGroupItem value="isNotAnyOf" id="isNotAnyOf" />
-                  <Label htmlFor="isNotAnyOf" className="text-sm font-medium dark:text-gray-200">
-                    Is not any of
-                  </Label>
+                  )}
                 </div>
-                {currentFilters.jobTitleType === "isNotAnyOf" && (
-                  <Popover open={excludeTitleDropdownOpen} onOpenChange={setExcludeTitleDropdownOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-[90%] justify-between text-xs bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 ml-3 text-gray-600 dark:text-gray-400"
-                      >
-                        {currentFilters.excludeJobTitle || "Enter titles to exclude"}
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[260px] p-1">
-                      <Input
-                        placeholder="Enter titles to exclude"
-                        value={excludeTitleSearchValue}
-                        onChange={(e) => setExcludeTitleSearchValue(e.target.value)}
-                        className=""
-                      />
-                      <div className="max-h-[200px] overflow-y-auto">
-                        {filteredJobTitles.map((title) => (
+                {/* Include Past Job Titles for Is Any Of */}
+                <div className="flex items-center gap-1 -ml-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+                  <Checkbox
+                    id="includePastIsAny"
+                    checked={includePastIsAny}
+                    onCheckedChange={(checked) => {
+                      setIncludePastIsAny(checked === true);
+                      if (checked !== true) {
+                        handleFilterChange("personTitlesPast[]", []);
+                        setPersonTitlesPast([]);
+                      }
+                    }}
+                  />
+                  <div className="flex items-center gap-2">
+                    <Label
+                      htmlFor="includePastIsAny"
+                      className="text-sm font-medium dark:text-gray-200"
+                    >
+                      Include past job titles
+                    </Label>
+                    <Info className="h-4 w-4 text-gray-500 dark:text-gray-400 cursor-help" />
+                  </div>
+                </div>
+                {includePastIsAny && (
+                  <div className="relative mt-2">
+                    <div
+                      className="flex flex-wrap gap-1 p-2 border rounded min-h-[40px] cursor-pointer"
+                      onClick={() =>
+                        setIsPersonTitlesPastDropdownOpen(!isPersonTitlesPastDropdownOpen)
+                      }
+                    >
+                      {personTitlesPast.map((option) => (
+                        <span
+                          key={option}
+                          className="bg-gray-200 text-sm px-2 py-1 rounded flex items-center gap-1"
+                        >
+                          {option}
+                          <X
+                            size={12}
+                            className="cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeOption(option, setPersonTitlesPast, "personTitlesPast[]");
+                            }}
+                          />
+                        </span>
+                      ))}
+                      <ChevronDown className="ml-auto" size={16} />
+                    </div>
+                    {isPersonTitlesPastDropdownOpen && (
+                      <div className="absolute top-full left-0 right-0 bg-white shadow rounded mt-1 z-10 max-h-40 overflow-y-auto">
+                        {allOptions.map((option) => (
                           <div
-                            key={title}
-                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                            key={option}
+                            className="p-2 hover:bg-gray-100 cursor-pointer"
                             onClick={() => {
-                              handleFilterChange("excludeJobTitle", title);
-                              setExcludeTitleDropdownOpen(false);
+                              toggleOption(option, setPersonTitlesPast);
+                              handleFilterChange(
+                                "personTitlesPast[]",
+                                personTitlesPast.includes(option)
+                                  ? personTitlesPast.filter((item) => item !== option)
+                                  : [...personTitlesPast, option]
+                              );
                             }}
                           >
-                            {title}
+                            <input
+                              type="checkbox"
+                              checked={personTitlesPast.includes(option)}
+                              readOnly
+                              className="mr-2"
+                            />
+                            {option}
                           </div>
                         ))}
                       </div>
-                    </PopoverContent>
-                  </Popover>
+                    )}
+                  </div>
                 )}
               </div>
-
-              {/* Past Job Titles */}
-              <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
-                <Checkbox
-                  id="includePastJobTitles"
-                  checked={currentFilters.includePastJobTitles}
-                  onCheckedChange={(checked) => handleFilterChange("includePastJobTitles", checked as boolean)}
-                />
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="includePastJobTitles" className="text-sm font-medium dark:text-gray-200">
-                    Include past job titles
-                  </Label>
-                  <Info className="h-4 w-4 text-gray-500 dark:text-gray-400 cursor-help" />
-                </div>
-              </div>
-
-              {currentFilters.includePastJobTitles && (
-                <Popover open={pastJobTitleDropdownOpen} onOpenChange={setPastJobTitleDropdownOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-[90%] justify-between text-xs bg-white ml-3 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400"
-                    >
-                      {currentFilters.pastJobTitle || "Search for past job title"}
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[260px] ">
-                    <Input
-                      placeholder="Search for a past job title"
-                      value={pastJobTitleSearchValue}
-                      onChange={(e) => setPastJobTitleSearchValue(e.target.value)}
-                      className=" "
-                    />
-                    <div className="max-h-[200px] overflow-y-auto">
-                      {filteredJobTitles.map((title) => (
-                        <div
-                          key={title}
-                          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
-                          onClick={() => {
-                            handleFilterChange("pastJobTitle", title);
-                            setPastJobTitleDropdownOpen(false);
-                          }}
-                        >
-                          {title}
-                        </div>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              )}
-            </RadioGroup>
-          </div>
-
-          {/* Known Status */}
-          <div className=" border-t dark:border-gray-700 pt-1">
-            <RadioGroup
-              defaultValue={currentFilters.knownStatus}
-              onValueChange={(value) => handleFilterChange("knownStatus", value)}
-            >
-              <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
-                <RadioGroupItem value="known" id="known" />
-                <Label htmlFor="known" className="text-sm font-medium dark:text-gray-200">
-                  Is known
-                </Label>
-              </div>
-              <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
-                <RadioGroupItem value="unknown" id="unknown" />
-                <Label htmlFor="unknown" className="text-sm font-medium dark:text-gray-200">
-                  Is unknown
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          {/* Management Level */}
-          <Collapsible
-            open={managementLevelOpen}
-            onOpenChange={setManagementLevelOpen}
-            className=" pt-2 border-t border-gray-200 dark:border-gray-700 pl-2"
-          >
-            <div className="flex items-center justify-between mb-1">
-              <h4 className="text-sm  font-semibold dark:text-gray-200">Management Level</h4>
-              <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-300",
-                    managementLevelOpen && "transform rotate-180"
-                  )}
-                />
-              </CollapsibleTrigger>
             </div>
-            <CollapsibleContent className="">
-              {managementLevels.map((level) => (
-                <div
-                  key={level.label}
-                  className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
-                >
+
+            {/* Is Not Any Of */}
+            <div className="-mt-8">
+              <div className="rounded p-4 w-full">
+                <div className="flex gap-2">
                   <Checkbox
-                    id={`level-${level.label}`}
-                    checked={currentFilters.managementLevels.includes(level.label)}
-                    onCheckedChange={(checked) => handleManagementLevelChange(level.label, checked as boolean)}
+                    id="isNotAny"
+                    checked={jobTitleFilterType === "isNotAny" || jobTitleFilterType === "both"}
+                    onCheckedChange={(checked) => handleIsNotAnyChange(checked === true)}
                   />
-                  <Label
-                    htmlFor={`level-${level.label}`}
-                    className="flex-1 text-sm font-medium dark:text-gray-200"
-                  >
-                    {level.label}
+                  <Label htmlFor="isNotAny" className="font-medium text-sm">
+                    Is not any of
                   </Label>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">({level.count})</span>
                 </div>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-
-          {/* Departments */}
-          <Collapsible
-            open={departmentsOpen}
-            onOpenChange={setDepartmentsOpen}
-            className="pt-2 pl-2 border-t border-gray-200 dark:border-gray-700"
-          >
-            <div className="flex items-center justify-between mb-1">
-              <h4 className="text-sm font-semibold dark:text-gray-200 ">Departments</h4>
-              <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-300",
-                    departmentsOpen && "transform rotate-180"
-                  )}
-                />
-              </CollapsibleTrigger>
+                {(jobTitleFilterType === "isNotAny" || jobTitleFilterType === "both") && (
+                  <>
+                    <div className="relative">
+                      <div
+                        className="flex flex-wrap gap-1 p-2 border rounded min-h-[40px] cursor-pointer"
+                        onClick={() =>
+                          setIsPersonNotTitlesDropdownOpen(!isPersonNotTitlesDropdownOpen)
+                        }
+                      >
+                        {personNotTitles.map((option) => (
+                          <span
+                            key={option}
+                            className="bg-gray-200 text-sm px-2 py-1 rounded flex items-center gap-1"
+                          >
+                            {option}
+                            <X
+                              size={12}
+                              className="cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeOption(option, setPersonNotTitles, "personNotTitles[]");
+                              }}
+                            />
+                          </span>
+                        ))}
+                        <ChevronDown className="ml-auto" size={16} />
+                      </div>
+                      {isPersonNotTitlesDropdownOpen && (
+                        <div className="absolute top-full left-0 right-0 bg-white shadow rounded mt-1 z-10 max-h-40 overflow-y-auto">
+                          {allOptions.map((option) => (
+                            <div
+                              key={option}
+                              className="p-2 hover:bg-gray-100 cursor-pointer"
+                              onClick={() => {
+                                toggleOption(option, setPersonNotTitles);
+                                handleFilterChange(
+                                  "personNotTitles[]",
+                                  personNotTitles.includes(option)
+                                    ? personNotTitles.filter((item) => item !== option)
+                                    : [...personNotTitles, option]
+                                );
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={personNotTitles.includes(option)}
+                                readOnly
+                                className="mr-2"
+                              />
+                              {option}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {/* Include Past Job Titles for Is Not Any Of */}
+                    <div className="flex items-center gap-1 -ml-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+                      <Checkbox
+                        id="includePastIsNotAny"
+                        checked={includePastIsNotAny}
+                        onCheckedChange={(checked) => {
+                          setIncludePastIsNotAny(checked === true);
+                          if (checked !== true) {
+                            handleFilterChange("personNotTitlesPast[]", []);
+                            setPersonNotTitlesPast([]);
+                          }
+                        }}
+                      />
+                      <div className="flex items-center gap-2">
+                        <Label
+                          htmlFor="includePastIsNotAny"
+                          className="text-sm font-medium dark:text-gray-200"
+                        >
+                          Include past job titles
+                        </Label>
+                        <Info className="h-4 w-4 text-gray-500 dark:text-gray-400 cursor-help" />
+                      </div>
+                    </div>
+                    {includePastIsNotAny && (
+                      <div className="relative mt-2">
+                        <div
+                          className="flex flex-wrap gap-1 p-2 border rounded min-h-[40px] cursor-pointer"
+                          onClick={() =>
+                            setIsPersonNotTitlesPastDropdownOpen(!isPersonNotTitlesPastDropdownOpen)
+                          }
+                        >
+                          {personNotTitlesPast.map((option) => (
+                            <span
+                              key={option}
+                              className="bg-gray-200 text-sm px-2 py-1 rounded flex items-center gap-1"
+                            >
+                              {option}
+                              <X
+                                size={12}
+                                className="cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeOption(option, setPersonNotTitlesPast, "personNotTitlesPast[]");
+                                }}
+                              />
+                            </span>
+                          ))}
+                          <ChevronDown className="ml-auto" size={16} />
+                        </div>
+                        {isPersonNotTitlesPastDropdownOpen && (
+                          <div className="absolute top-full left-0 right-0 bg-white shadow rounded mt-1 z-10 max-h-40 overflow-y-auto">
+                            {allOptions.map((option) => (
+                              <div
+                                key={option}
+                                className="p-2 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => {
+                                  toggleOption(option, setPersonNotTitlesPast);
+                                  handleFilterChange(
+                                    "personNotTitlesPast[]",
+                                    personNotTitlesPast.includes(option)
+                                      ? personNotTitlesPast.filter((item) => item !== option)
+                                      : [...personNotTitlesPast, option]
+                                  );
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={personNotTitlesPast.includes(option)}
+                                  readOnly
+                                  className="mr-2"
+                                />
+                                {option}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-            <CollapsibleContent className="space-y-1">
-              <Input
-                placeholder="Search departments"
-                value={departmentSearchValue}
-                onChange={(e) => setDepartmentSearchValue(e.target.value)}
-                className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
-              />
-              <div className="max-h-[200px] overflow-y-auto">
-                {filteredDepartments.map((dept) => (
+
+            {/* Known Status */}
+            <div className="border-t dark:border-gray-700 pt-1">
+              <RadioGroup
+                value={
+                  currentFilters.existFields.includes("person_title_normalized")
+                    ? "known"
+                    : currentFilters.notExistFields.includes("person_title_normalized")
+                    ? "unknown"
+                    : ""
+                }
+                onValueChange={(value) => {
+                  if (value === "known") {
+                    const newParams = {
+                      "existFields[]": ["person_title_normalized"],
+                      "notExistFields[]": [],
+                    };
+                    const queryString = createQueryString(newParams);
+                    router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
+                  } else if (value === "unknown") {
+                    const newParams = {
+                      "notExistFields[]": ["person_title_normalized"],
+                      "existFields[]": [],
+                    };
+                    const queryString = createQueryString(newParams);
+                    router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
+                  }
+                }}
+              >
+                <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+                  <RadioGroupItem value="known" id="known" />
+                  <Label htmlFor="known" className="text-sm font-medium dark:text-gray-200">
+                    Is known
+                  </Label>
+                </div>
+                <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+                  <RadioGroupItem value="unknown" id="unknown" />
+                  <Label htmlFor="unknown" className="text-sm font-medium dark:text-gray-200">
+                    Is unknown
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Management Level */}
+            <Collapsible
+              open={managementLevelOpen}
+              onOpenChange={setManagementLevelOpen}
+              className="pt-2 border-t border-gray-200 dark:border-gray-700 pl-2"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <h4 className="text-sm font-semibold dark:text-gray-200">Management Level</h4>
+                <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-300",
+                      managementLevelOpen && "transform rotate-180"
+                    )}
+                  />
+                </CollapsibleTrigger>
+              </div>
+              <CollapsibleContent>
+                {managementLevels.map((level) => (
                   <div
-                    key={dept.label}
-                    className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
+                    key={level.label}
+                    className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
                   >
                     <Checkbox
-                      id={`dept-${dept.label}`}
-                      checked={currentFilters.departments.includes(dept.label)}
-                      onCheckedChange={(checked) => handleDepartmentChange(dept.label, checked as boolean)}
+                      id={`level-${level.label}`}
+                      checked={currentFilters.personSeniorities.includes(level.label)}
+                      onCheckedChange={() => handleManagementLevelChange(level.label)}
                     />
                     <Label
-                      htmlFor={`dept-${dept.label}`}
+                      htmlFor={`level-${level.label}`}
                       className="flex-1 text-sm font-medium dark:text-gray-200"
                     >
-                      {dept.label}
+                      {level.label}
                     </Label>
-                    <Button variant="ghost" size="sm" className="p-0 h-6 w-6">
-                      <Plus className="h-4 w-4" />
-                    </Button>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">({level.count})</span>
                   </div>
                 ))}
+              </CollapsibleContent>
+            </Collapsible>
+
+            {/* Departments */}
+            <Collapsible
+              open={departmentsOpen}
+              onOpenChange={setDepartmentsOpen}
+              className="pt-2 pl-2 border-t border-gray-200 dark:border-gray-700"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <h4 className="text-sm font-semibold dark:text-gray-200">Departments</h4>
+                <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-300",
+                      departmentsOpen && "transform rotate-180"
+                    )}
+                  />
+                </CollapsibleTrigger>
               </div>
-            </CollapsibleContent>
-          </Collapsible>
+              <CollapsibleContent className="space-y-1">
+                <Input
+                  placeholder="Search departments"
+                  value={departmentSearchValue}
+                  onChange={(e) => setDepartmentSearchValue(e.target.value)}
+                  className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+                />
+                <div className="max-h-[200px] overflow-y-auto">
+                  {filteredDepartments.map((dept) => (
+                    <div
+                      key={dept.label}
+                      className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
+                    >
+                      <Checkbox
+                        id={`dept-${dept.label}`}
+                        checked={currentFilters.personDepartmentOrSubdepartments.includes(
+                          dept.label
+                        )}
+                        onCheckedChange={() => handleDepartmentChange(dept.label)}
+                      />
+                      <Label
+                        htmlFor={`dept-${dept.label}`}
+                        className="flex-1 text-sm font-medium dark:text-gray-200"
+                      >
+                        {dept.label}
+                      </Label>
+                      <Button variant="ghost" size="sm" className="p-0 h-6 w-6">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
-          {/* Create Persona Button */}
-          <Button
-            variant="outline"
-            className="w-full mt-4 flex items-center justify-center gap-2 text-sm border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-          >
-            <User2 className="h-4 w-4" />
-            Create New Persona
-          </Button>
+            {/* Create Persona Button */}
+            <Button
+              variant="outline"
+              className="w-full mt-4 flex items-center justify-center gap-2 text-sm border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              <User2 className="h-4 w-4" />
+              Create New Persona
+            </Button>
 
-          <div className="text-center">
-            <a href="#" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
-              What&apos;s a Persona?
-            </a>
+            <div className="text-center">
+              <a href="#" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                What&apos;s a Persona?
+              </a>
+            </div>
           </div>
         </CollapsibleContent>
       </Collapsible>
