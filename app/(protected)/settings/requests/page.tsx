@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import Link from "next/link";
 import { FileText, ChevronRight, RefreshCw, Clock, BarChart } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Requests Settings | Leadfume",

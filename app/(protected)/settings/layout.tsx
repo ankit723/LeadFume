@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
 
 // This is now a client component
 const Layout = ({ children }: { children: React.ReactNode }) => {

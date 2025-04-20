@@ -14,7 +14,7 @@ export async function freshSeedEmployees(seedNumber: number){
     await prisma.employee.deleteMany()
   }
   for(let i = 0; i < seedNumber; i++){
-    const employee = await prisma.employee.create({
+    await prisma.employee.create({
       data: {
         id: uuidv4(),
         name: faker.person.fullName(),

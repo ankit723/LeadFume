@@ -8,8 +8,13 @@ import { Button } from "@/components/ui/button";
 import ClientSearchBar from "@/app/components/dashboard/ClientSearchBar";
 import MobileSidebar from "@/app/components/dashboard/MobileSidebar";
 import ClientUserButton from "@/app/components/dashboard/ClientUserButton";
+import { getUser } from "@/app/actions";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
+    const user = await getUser()
+    const isUserPremium = user?.subscription
+    console.log("isUserPremium", isUserPremium)
+
 
     return (
         <section className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -39,11 +44,13 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                         </div>
                     </div>
                     <div className="ml-auto flex items-center gap-x-5">
+                        {!isUserPremium && (
                         <Link href={'/pricing'} className="hidden sm:block">
                             <Button variant="secondary" className="bg-primary/80 cursor-pointer hover:bg-primary/90 transition-all duration-200 hover:shadow-xl hover:shadow-primary/25">
                                 Upgrade To Pro
                             </Button>
                         </Link>
+                        )}
 
                         <Button 
                         variant="secondary" 

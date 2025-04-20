@@ -60,29 +60,31 @@ const CompanyFilter = () => {
   const [isNotAnyOf, setIsNotAnyOf] = useState(false);
   const [includePastCompany, setIncludePastCompany] = useState(false);
 
-  // Parse query parameters without %5B%5D encoding
-  const organizationIds = searchParams.getAll("organizationIds[]") || [];
-  const notOrganizationIds = searchParams.getAll("notOrganizationIds[]") || [];
-  const personPastOrganizationIds = searchParams.getAll("personPastOrganizationIds[]") || [];
-  const existFields = searchParams.getAll("existFields[]") || [];
-  const notExistFields = searchParams.getAll("notExistFields[]") || [];
-  const qOrganizationSearchListId = searchParams.get("qOrganizationSearchListId") || "";
-  const qNotOrganizationSearchListId = searchParams.get("qNotOrganizationSearchListId") || "";
-
   const currentFilters = useMemo(
-    () => ({
-      companyFilterType:
-        existFields.includes("organization_id") ? "isKnown" :
-        notExistFields.includes("organization_id") ? "isUnknown" : "isAnyOf",
-      isNotAnyOf: notOrganizationIds.length > 0, // Infer from presence of notOrganizationIds[]
-      includePastCompany: personPastOrganizationIds.length > 0, // Infer from presence of personPastOrganizationIds[]
-      domainExists: existFields.includes("organization_domain"),
-      organizationIds,
-      notOrganizationIds,
-      personPastOrganizationIds,
-      qOrganizationSearchListId,
-      qNotOrganizationSearchListId,
-    }),
+    () => {
+      // Parse query parameters without %5B%5D encoding - moved inside useMemo
+      const organizationIds = searchParams.getAll("organizationIds[]") || [];
+      const notOrganizationIds = searchParams.getAll("notOrganizationIds[]") || [];
+      const personPastOrganizationIds = searchParams.getAll("personPastOrganizationIds[]") || [];
+      const existFields = searchParams.getAll("existFields[]") || [];
+      const notExistFields = searchParams.getAll("notExistFields[]") || [];
+      const qOrganizationSearchListId = searchParams.get("qOrganizationSearchListId") || "";
+      const qNotOrganizationSearchListId = searchParams.get("qNotOrganizationSearchListId") || "";
+      
+      return {
+        companyFilterType:
+          existFields.includes("organization_id") ? "isKnown" :
+          notExistFields.includes("organization_id") ? "isUnknown" : "isAnyOf",
+        isNotAnyOf: notOrganizationIds.length > 0, // Infer from presence of notOrganizationIds[]
+        includePastCompany: personPastOrganizationIds.length > 0, // Infer from presence of personPastOrganizationIds[]
+        domainExists: existFields.includes("organization_domain"),
+        organizationIds,
+        notOrganizationIds,
+        personPastOrganizationIds,
+        qOrganizationSearchListId,
+        qNotOrganizationSearchListId,
+      };
+    },
     [searchParams]
   );
 
@@ -96,6 +98,8 @@ const CompanyFilter = () => {
     currentFilters.organizationIds,
     currentFilters.notOrganizationIds,
     currentFilters.personPastOrganizationIds,
+    currentFilters.isNotAnyOf,
+    currentFilters.includePastCompany
   ]);
 
   const createQueryString = (params: Record<string, string | boolean | string[]>) => {

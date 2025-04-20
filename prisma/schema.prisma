@@ -8,16 +8,16 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum SubscriptionDuration {
-  MONTHLY
-  YEARLY
-}
 
 model SubscriptionType {
   id String @id @default(uuid())
-  duration SubscriptionDuration
+  name String @default("")
+  description String @default("")
   price Int
   credits Int
+  annualDiscount Int @default(10)
+  isPopular Boolean @default(false)
+  isActive Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   subscriptions Subscriptions[]
@@ -50,8 +50,14 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+enum EmployeeRole {
+  ADMIN
+  EMPLOYEE
+}
+
 model Employee {
   id String @id @default(uuid())
+  employeeRole EmployeeRole @default(EMPLOYEE)
   name String
   email String @unique
   password String

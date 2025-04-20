@@ -2,7 +2,6 @@ import filterOptions from "@/app/config/filterOptions"
 import React from "react"
 import UsersInfo from "@/app/components/dashboard/usersInfo"
 import { FilterOption } from "@/app/types/filterOptions"
-import { Button } from "@/components/ui/button";
 import FilterResults from "@/app/components/filters/filterResults";
 import { getUser } from "@/app/actions";
 interface PageProps {
@@ -23,7 +22,7 @@ const page = async ({params}:PageProps) => {
       <div className="flex-1 flex flex-wrap gap-4 mx-4">
         {filterComponent && <DynamicFilter />}  
         <div className="flex-1 flex flex-col gap-4 mx-4"> 
-          <FilterResults isUserPremium={!user?.subscription?true:false} user={user}/>
+          <FilterResults isUserPremium={user?.subscription?true:false} user={user}/>
         </div>
       </div>
         

@@ -1,5 +1,4 @@
 'use client'
-import { Link } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
 import { useSearchParams, useParams, useRouter } from 'next/navigation'

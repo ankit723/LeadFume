@@ -11,23 +11,30 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { ChevronLeft, Calendar, Clock, CreditCard, Link2, CheckCircle2, XCircle, Loader2, AlertCircle } from 'lucide-react';
 import CancelRequestButton from './CancelRequestButton';
+import Image from 'next/image';
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
 
 export const metadata: Metadata = {
   title: 'Request Details | Leadfume',
   description: 'View your request details',
 };
 
-export default async function RequestDetailPage({ params }: { params: { id: string } }) {
+export default async function RequestDetailPage({ params }: PageProps) {
   const { userId } = await auth();
   
   if (!userId) {
     redirect('/sign-in');
   }
   
+  const resolvedParams = await params;
+  
   // Fetch the request with the given ID, ensuring it belongs to the current user
   const request = await prisma.request.findUnique({
     where: {
-      id: params.id,
+      id: resolvedParams.id,
       userId: userId,
     },
     include: {
@@ -189,9 +196,11 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
                   </p>
                   <div className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg border border-primary/10">
                     <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-primary/20 shadow-sm">
-                      <img 
+                      <Image
                         src={request.assignedEmployee.profileImage} 
                         alt={request.assignedEmployee.name}
+                        width={56}
+                        height={56}
                         className="h-full w-full object-cover" 
                       />
                     </div>
@@ -217,9 +226,11 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
                   </p>
                   <div className="flex items-center space-x-4 p-3 bg-green-500/5 rounded-lg border border-green-500/20">
                     <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-green-500/20 shadow-sm">
-                      <img 
+                      <Image
                         src={request.completedEmployee.profileImage} 
                         alt={request.completedEmployee.name}
+                        width={56}
+                        height={56}
                         className="h-full w-full object-cover" 
                       />
                     </div>
