@@ -19,6 +19,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 
+// This is a client component, so we can't export metadata here
+// Metadata should be in a server component layout file or page.tsx file
+
 // This is now a client component
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname()

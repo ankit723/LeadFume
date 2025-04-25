@@ -124,7 +124,7 @@ const RequestsPage = async () => {
           <Table>
             <TableHeader className="bg-muted/50">
               <TableRow>
-                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Name</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Credits</TableHead>
                 <TableHead>Status</TableHead>
@@ -135,7 +135,7 @@ const RequestsPage = async () => {
               {requests.length > 0 ? (
                 requests.map((request) => (
                   <TableRow key={request.id} className="hover:bg-muted/30 transition-colors group">
-                    <TableCell className="font-medium text-primary/80">{request.id.substring(0, 8)}...</TableCell>
+                    <TableCell className="font-medium text-primary/80">{request.name}</TableCell>
                     <TableCell>{format(new Date(request.createdAt), 'MMM dd, yyyy')}</TableCell>
                     <TableCell>{request.creditsNeeded}</TableCell>
                     <TableCell>
@@ -189,28 +189,6 @@ const RequestsPage = async () => {
       </div>
       
       <Separator className="bg-primary/10" />
-      
-      <div className="space-y-2">
-        <h4 className="font-medium flex items-center space-x-2">
-          <span>Permissions</span>
-        </h4>
-        <p className="text-sm text-muted-foreground">
-          Manage third-party access to your data.
-        </p>
-        
-        <Card className="mt-4 bg-gradient-to-br from-background to-muted/20 border-primary/10">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-center py-6 text-muted-foreground">
-              <p className="text-sm flex items-center">
-                <span className="mr-2">No active permissions</span>
-                <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary text-xs h-7">
-                  Manage
-                </Button>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };

@@ -9,9 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import { ChevronLeft, Calendar, Clock, CreditCard, Link2, CheckCircle2, XCircle, Loader2, AlertCircle } from 'lucide-react';
-import CancelRequestButton from './CancelRequestButton';
-import Image from 'next/image';
+import { ChevronLeft, Calendar, Clock, CreditCard, CheckCircle2, XCircle, Loader2, AlertCircle } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -53,6 +51,8 @@ export default async function RequestDetailPage({ params }: PageProps) {
     if (!date) return 'Not set';
     return format(new Date(date), 'PPP');
   };
+
+  
   
   // Helper for status color and icon
   const getStatusInfo = (status: string) => {
@@ -112,7 +112,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
       
       <Separator className="bg-primary/10" />
       
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="">
         <Card className="border-primary/10 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden bg-gradient-to-br from-background to-blue-500/5">
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-base font-medium">Request Information</CardTitle>
@@ -123,9 +123,9 @@ export default async function RequestDetailPage({ params }: PageProps) {
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground flex items-center">
                   <span className="mr-1.5 h-2 w-2 rounded-full bg-primary/50"></span>
-                  ID
+                  Name
                 </p>
-                <p className="text-sm font-mono bg-muted/50 px-2 py-1 rounded text-primary/80 border border-primary/10 overflow-hidden text-ellipsis">{request.id}</p>
+                <p className="text-sm font-mono bg-muted/50 px-2 py-1 rounded text-primary border border-primary/10 overflow-hidden text-ellipsis">{request.name}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground flex items-center">
@@ -160,104 +160,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
             </div>
           </CardContent>
         </Card>
-        
-        <Card className="border-primary/10 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden bg-gradient-to-br from-background to-purple-500/5">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-medium">Request Parameters</CardTitle>
-            <Link2 className="h-4 w-4 text-primary/70" />
-          </CardHeader>
-          <CardContent className="pt-2">
-            <div className="overflow-auto max-h-60 rounded-md bg-muted/40 p-4 border border-primary/10">
-              <pre className="text-xs">{JSON.stringify(JSON.parse(request.requestQueryParams as string), null, 2)}</pre>
-            </div>
-            <div className="mt-4">
-              <p className="text-sm font-medium text-muted-foreground flex items-center">
-                <span className="mr-1.5 h-2 w-2 rounded-full bg-primary/50"></span>
-                Request URL
-              </p>
-              <div className="mt-1 p-2 bg-muted/40 rounded-md border border-primary/10">
-                <p className="text-sm break-all font-mono text-primary/80">{request.requestParameterisedURL}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {(request.assignedEmployee || request.completedEmployee) && (
-          <Card className="md:col-span-2 border-primary/10 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden bg-gradient-to-r from-background via-background to-green-500/5">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-medium">Assigned Staff</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-2">
-              {request.assignedEmployee && (
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground flex items-center mb-3">
-                    <span className="mr-1.5 h-2 w-2 rounded-full bg-primary/50"></span>
-                    Assigned To
-                  </p>
-                  <div className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg border border-primary/10">
-                    <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-primary/20 shadow-sm">
-                      <Image
-                        src={request.assignedEmployee.profileImage} 
-                        alt={request.assignedEmployee.name}
-                        width={56}
-                        height={56}
-                        className="h-full w-full object-cover" 
-                      />
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold">{request.assignedEmployee.name}</p>
-                      <p className="text-sm text-muted-foreground">{request.assignedEmployee.email}</p>
-                      <Badge 
-                        variant="outline" 
-                        className="mt-1 bg-primary/5 text-primary border-primary/20 text-xs font-normal"
-                      >
-                        Assigned {formatDate(request.createdAt)}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {request.completedEmployee && (
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground flex items-center mb-3">
-                    <span className="mr-1.5 h-2 w-2 rounded-full bg-green-500"></span>
-                    Completed By
-                  </p>
-                  <div className="flex items-center space-x-4 p-3 bg-green-500/5 rounded-lg border border-green-500/20">
-                    <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-green-500/20 shadow-sm">
-                      <Image
-                        src={request.completedEmployee.profileImage} 
-                        alt={request.completedEmployee.name}
-                        width={56}
-                        height={56}
-                        className="h-full w-full object-cover" 
-                      />
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold">{request.completedEmployee.name}</p>
-                      <p className="text-sm text-muted-foreground">{request.completedEmployee.email}</p>
-                      <Badge 
-                        variant="outline" 
-                        className="mt-1 bg-green-500/10 text-green-600 border-green-500/20 text-xs font-normal"
-                      >
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        Completed {formatDate(request.updatedAt)}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
       </div>
-      
-      {request.status === 'ORDERED' && (
-        <div className="flex justify-end">
-          <CancelRequestButton requestId={request.id} />
-        </div>
-      )}
     </div>
   );
 } 

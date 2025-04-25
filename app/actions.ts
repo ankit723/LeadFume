@@ -182,6 +182,7 @@ export const addRequest = async (request: Request) => {
             assignedEmployeeId: assignedEmployeeId,
             completedEmployeeId: request.completedEmployeeId,
             userId: userId,
+            name: request.name,
             createdAt: new Date(),
             updatedAt: new Date()
         }

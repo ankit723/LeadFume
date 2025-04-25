@@ -81,6 +81,7 @@ enum RequestStatus {
 
 model Request {
   id String @id @default(uuid())
+  name String @default("")
   userId String
   user User @relation(fields: [userId], references: [id])
   status RequestStatus @default(ORDERED)

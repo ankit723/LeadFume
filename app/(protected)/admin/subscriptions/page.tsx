@@ -48,7 +48,8 @@ const AdminSubscriptionsPage = () => {
   const [subscriptionTypes, setSubscriptionTypes] = useState<SubscriptionType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [currentSubscription, setCurrentSubscription] = useState<SubscriptionType | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -106,7 +107,7 @@ const AdminSubscriptionsPage = () => {
       isPopular: subscription.isPopular,
       isActive: subscription.isActive
     });
-    setIsEditing(true);
+    setIsEditModalOpen(true);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -129,7 +130,7 @@ const AdminSubscriptionsPage = () => {
   const handleSaveChanges = async () => {
     if (!currentSubscription) return;
     
-    setIsEditing(true);
+    setIsSaving(true);
     try {
       const result = await updateSubscriptionType({
         id: currentSubscription.id,
@@ -152,7 +153,7 @@ const AdminSubscriptionsPage = () => {
               : item
           )
         );
-        setIsEditing(false);
+        setIsEditModalOpen(false);
       } else {
         toast.error(result.error || 'Failed to update subscription type');
       }
@@ -160,7 +161,7 @@ const AdminSubscriptionsPage = () => {
       console.error('Error updating subscription type:', error);
       toast.error('Failed to update subscription type');
     } finally {
-      setIsEditing(false);
+      setIsSaving(false);
     }
   };
 
@@ -330,7 +331,7 @@ const AdminSubscriptionsPage = () => {
       )}
 
       {/* Edit Dialog */}
-      <Dialog open={isEditing} onOpenChange={(open) => !isEditing || setIsEditing(open)}>
+      <Dialog open={isEditModalOpen} onOpenChange={(open) => setIsEditModalOpen(open)}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Edit Subscription</DialogTitle>
@@ -425,11 +426,11 @@ const AdminSubscriptionsPage = () => {
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSaveChanges} disabled={isEditing}>
-              {isEditing ? (
+            <Button onClick={handleSaveChanges} disabled={isSaving}>
+              {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving...
