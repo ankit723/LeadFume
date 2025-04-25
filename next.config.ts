@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ['utfs.io', "img.clerk.com", "oqaoqohtxtswvtgadffs.supabase.co", "avatars.githubusercontent.com"],
+    domains: ['utfs.io',"cdn.jsdelivr.net" , "avatars.githubusercontent.com","img.clerk.com", "oqaoqohtxtswvtgadffs.supabase.co"],
   },
   // Add proper handling for 404 pages
   async redirects() {
