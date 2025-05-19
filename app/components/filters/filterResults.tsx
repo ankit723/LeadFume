@@ -1,6 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams, useParams, useRouter } from 'next/navigation'
 import { Request, RequestStatus, User } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'

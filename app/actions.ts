@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import { v4 as uuidv4 } from 'uuid';
 import { Request } from "@prisma/client";
 
-
 export async function getUser() {
 
     const { userId } = await auth();
@@ -992,3 +991,634 @@ export async function createEmployee(data: CreateEmployeeData) {
   }
 }
 
+// Support Ticket System Actions
+
+interface CreateTicketData {
+  subject: string;
+  description: string;
+  category: 'TECHNICAL' | 'BILLING' | 'ACCOUNT' | 'DATA_QUALITY' | 'FEATURE_REQUEST' | 'OTHER';
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  attachments?: {
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    fileType: string;
+  }[];
+}
+
+export async function createSupportTicket(data: CreateTicketData) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Generate a ticket number with format LFYYMM-XXXX
+    const now = new Date();
+    const year = now.getFullYear().toString().slice(-2);
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const random = Math.floor(1000 + Math.random() * 9000);
+    const ticketNumber = `LF${year}${month}-${random}`;
+
+    // Create the support ticket
+    const ticket = await prisma.supportTicket.create({
+      data: {
+        ticketNumber,
+        subject: data.subject,
+        description: data.description,
+        category: data.category,
+        priority: data.priority || 'MEDIUM',
+        status: 'OPEN',
+        userId,
+        // Add attachments if provided
+        attachments: data.attachments 
+          ? {
+              createMany: {
+                data: data.attachments.map(attachment => ({
+                  fileName: attachment.fileName,
+                  fileUrl: attachment.fileUrl,
+                  fileSize: attachment.fileSize,
+                  fileType: attachment.fileType
+                }))
+              }
+            } 
+          : undefined
+      },
+      include: {
+        attachments: true
+      }
+    });
+
+    return { success: true, data: ticket };
+  } catch (error) {
+    console.error("Error creating support ticket:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function uploadTicketAttachment(base64File: string, fileName: string) {
+  try {
+    if (!base64File || !base64File.includes('base64')) {
+      return { success: false, error: "Invalid file data" };
+    }
+
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Create Supabase client
+    const supabase = await createClient();
+    
+    // Extract content type and base64 data
+    const matches = base64File.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    
+    if (!matches || matches.length !== 3) {
+      return { success: false, error: "Invalid base64 string format" };
+    }
+    
+    const contentType = matches[1];
+    const base64Data = matches[2];
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    // Generate a unique filename
+    const uniqueFileName = `${userId}-${uuidv4()}-${fileName}`;
+    const filePath = `ticket-attachments/${uniqueFileName}`;
+    
+    // Upload to Supabase Storage
+    const { error } = await supabase.storage
+      .from('support-tickets')
+      .upload(filePath, buffer, {
+        contentType,
+        upsert: true
+      });
+        
+    if (error) {
+      console.error("Error uploading file:", error);
+      return { success: false, error: error.message };
+    }
+    
+    // Get the public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('support-tickets')
+      .getPublicUrl(filePath);
+    
+    // Return file information
+    return { 
+      success: true, 
+      data: {
+        fileName,
+        fileUrl: publicUrl,
+        fileSize: buffer.length,
+        fileType: contentType
+      } 
+    };
+  } catch (error) {
+    console.error("Error uploading ticket attachment:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+interface AddTicketReplyData {
+  ticketId: string;
+  message: string;
+  isInternal?: boolean;
+  attachments?: {
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    fileType: string;
+  }[];
+}
+
+export async function addTicketReply(data: AddTicketReplyData) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Check if the ticket exists and belongs to the user or if the user is an employee
+    const ticket = await prisma.supportTicket.findUnique({
+      where: { id: data.ticketId },
+      include: { user: true }
+    });
+
+    if (!ticket) {
+      return { success: false, error: "Ticket not found" };
+    }
+
+    // Get the user or employee role
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const employee = !user ? await prisma.employee.findFirst({ where: { id: userId } }) : null;
+
+    // If not a user or employee, or if user doesn't own the ticket
+    if (!user && !employee) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    if (user && ticket.userId !== userId) {
+      return { success: false, error: "You don't have permission to reply to this ticket" };
+    }
+
+    // Create the reply
+    const reply = await prisma.ticketReply.create({
+      data: {
+        message: data.message,
+        ticketId: data.ticketId,
+        userId: user ? userId : null,
+        employeeId: employee ? userId : null,
+        isInternal: data.isInternal || false,
+        // Add attachments if provided
+        attachments: data.attachments 
+          ? {
+              createMany: {
+                data: data.attachments.map(attachment => ({
+                  fileName: attachment.fileName,
+                  fileUrl: attachment.fileUrl,
+                  fileSize: attachment.fileSize,
+                  fileType: attachment.fileType
+                }))
+              }
+            } 
+          : undefined
+      },
+      include: {
+        attachments: true,
+        user: true,
+        employee: true
+      }
+    });
+
+    // Update the ticket status based on who replied
+    let newStatus = ticket.status;
+    
+    if (user) {
+      // If user replied, change status to OPEN or keep it as is if it's already OPEN
+      newStatus = ticket.status === 'WAITING_USER_REPLY' ? 'OPEN' : ticket.status;
+    } else if (employee) {
+      // If employee replied, change status to WAITING_USER_REPLY
+      newStatus = 'WAITING_USER_REPLY';
+    }
+
+    if (newStatus !== ticket.status) {
+      await prisma.supportTicket.update({
+        where: { id: data.ticketId },
+        data: { status: newStatus }
+      });
+    }
+
+    return { success: true, data: reply };
+  } catch (error) {
+    console.error("Error adding ticket reply:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function getUserTickets({
+  page = 1,
+  limit = 10,
+  status = undefined,
+  sortBy = 'createdAt',
+  sortOrder = 'desc'
+}: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+} = {}) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Set up filter conditions
+    const where: any = { userId };
+    if (status) {
+      where.status = status;
+    }
+
+    // Get total count for pagination
+    const totalCount = await prisma.supportTicket.count({ where });
+
+    // Fetch tickets with pagination
+    const tickets = await prisma.supportTicket.findMany({
+      where,
+      include: {
+        replies: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: {
+            user: true,
+            employee: true
+          }
+        },
+        assignedEmployee: true
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip: (page - 1) * limit,
+      take: limit
+    });
+
+    return {
+      success: true,
+      data: {
+        tickets,
+        pagination: {
+          total: totalCount,
+          page,
+          limit,
+          totalPages: Math.ceil(totalCount / limit)
+        }
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching user tickets:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function getTicketDetails(ticketId: string) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Get the user or employee role
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const employee = !user ? await prisma.employee.findFirst({ where: { id: userId } }) : null;
+
+    // Fetch the ticket with all details
+    const ticket = await prisma.supportTicket.findUnique({
+      where: { id: ticketId },
+      include: {
+        user: true,
+        assignedEmployee: true,
+        resolvedEmployee: true,
+        replies: {
+          orderBy: { createdAt: 'asc' },
+          include: {
+            user: true,
+            employee: true,
+            attachments: true
+          }
+        },
+        attachments: true
+      }
+    });
+
+    if (!ticket) {
+      return { success: false, error: "Ticket not found" };
+    }
+
+    // Check if the user has access to this ticket
+    if (user && ticket.userId !== userId) {
+      return { success: false, error: "You don't have permission to view this ticket" };
+    }
+
+    // For employees, filter out internal replies if not an employee
+    if (!employee) {
+      ticket.replies = ticket.replies.filter(reply => !reply.isInternal);
+    }
+
+    return { success: true, data: ticket };
+  } catch (error) {
+    console.error("Error fetching ticket details:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+// Admin Support Ticket Functions
+
+export async function getAllSupportTickets({
+  page = 1,
+  limit = 10,
+  status = undefined,
+  category = undefined,
+  priority = undefined,
+  assignedToMe = false,
+  search = '',
+  sortBy = 'createdAt',
+  sortOrder = 'desc'
+}: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  category?: string;
+  priority?: string;
+  assignedToMe?: boolean;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+} = {}) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Verify if the user is an employee
+    const employee = await prisma.employee.findFirst({ 
+      where: { id: userId } 
+    });
+
+    if (!employee) {
+      return { success: false, error: "Only employees can access this function" };
+    }
+
+    // Set up filter conditions
+    const where: any = {};
+    
+    if (status) {
+      where.status = status;
+    }
+    
+    if (category) {
+      where.category = category;
+    }
+    
+    if (priority) {
+      where.priority = priority;
+    }
+    
+    if (assignedToMe) {
+      where.assignedEmployeeId = userId;
+    }
+    
+    if (search) {
+      where.OR = [
+        { subject: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { ticketNumber: { contains: search, mode: 'insensitive' } },
+        { user: {
+            OR: [
+              { firstName: { contains: search, mode: 'insensitive' } },
+              { lastName: { contains: search, mode: 'insensitive' } },
+              { email: { contains: search, mode: 'insensitive' } }
+            ]
+          }
+        }
+      ];
+    }
+
+    // Get total count for pagination
+    const totalCount = await prisma.supportTicket.count({ where });
+
+    // Fetch tickets with pagination
+    const tickets = await prisma.supportTicket.findMany({
+      where,
+      include: {
+        user: true,
+        assignedEmployee: true,
+        replies: {
+          orderBy: { createdAt: 'desc' },
+          take: 1
+        }
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip: (page - 1) * limit,
+      take: limit
+    });
+
+    return {
+      success: true,
+      data: {
+        tickets,
+        pagination: {
+          total: totalCount,
+          page,
+          limit,
+          totalPages: Math.ceil(totalCount / limit)
+        }
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching all support tickets:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function updateTicketStatus(ticketId: string, status: 'OPEN' | 'IN_PROGRESS' | 'WAITING_USER_REPLY' | 'RESOLVED' | 'CLOSED') {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Verify if the user is an employee
+    const employee = await prisma.employee.findFirst({ 
+      where: { id: userId } 
+    });
+
+    if (!employee) {
+      return { success: false, error: "Only employees can update ticket status" };
+    }
+
+    // Update the ticket
+    const data: any = { status };
+
+    // If status is RESOLVED, set resolvedAt and resolvedEmployeeId
+    if (status === 'RESOLVED') {
+      data.resolvedAt = new Date();
+      data.resolvedEmployeeId = userId;
+    }
+    
+    // If status is CLOSED, set closedAt
+    if (status === 'CLOSED') {
+      data.closedAt = new Date();
+    }
+
+    const updatedTicket = await prisma.supportTicket.update({
+      where: { id: ticketId },
+      data,
+      include: {
+        user: true,
+        assignedEmployee: true,
+        resolvedEmployee: true
+      }
+    });
+
+    return { success: true, data: updatedTicket };
+  } catch (error) {
+    console.error("Error updating ticket status:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function assignTicket(ticketId: string, employeeId: string) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Verify if the user is an employee with admin role
+    const employee = await prisma.employee.findFirst({ 
+      where: { id: userId, employeeRole: 'ADMIN' } 
+    });
+
+    if (!employee) {
+      return { success: false, error: "Only admins can assign tickets" };
+    }
+
+    // Check if the employee to assign exists
+    const assignedEmployee = await prisma.employee.findUnique({
+      where: { id: employeeId }
+    });
+
+    if (!assignedEmployee) {
+      return { success: false, error: "Employee not found" };
+    }
+
+    // Update the ticket
+    const updatedTicket = await prisma.supportTicket.update({
+      where: { id: ticketId },
+      data: {
+        assignedEmployeeId: employeeId,
+        // If the ticket is still OPEN, set it to IN_PROGRESS when assigned
+        status: { set: 'IN_PROGRESS' }
+      },
+      include: {
+        user: true,
+        assignedEmployee: true
+      }
+    });
+
+    return { success: true, data: updatedTicket };
+  } catch (error) {
+    console.error("Error assigning ticket:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function updateTicketPriority(ticketId: string, priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Verify if the user is an employee
+    const employee = await prisma.employee.findFirst({ 
+      where: { id: userId } 
+    });
+
+    if (!employee) {
+      return { success: false, error: "Only employees can update ticket priority" };
+    }
+
+    // Update the ticket
+    const updatedTicket = await prisma.supportTicket.update({
+      where: { id: ticketId },
+      data: { priority },
+      include: {
+        user: true,
+        assignedEmployee: true
+      }
+    });
+
+    return { success: true, data: updatedTicket };
+  } catch (error) {
+    console.error("Error updating ticket priority:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function getTicketById(ticketId: string) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    return { success: false, error: 'You must be logged in to view ticket details' };
+  }
+
+  try {
+    const ticket = await prisma.supportTicket.findUnique({
+      where: {
+        id: ticketId,
+        userId, // Ensure user can only access their own tickets
+      },
+      include: {
+        attachments: true,
+        replies: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              }
+            },
+            employee: {
+              select: {
+                id: true,
+                name: true,
+              }
+            }
+          }
+        },
+      },
+    });
+    
+    if (!ticket) {
+      return { success: false, error: 'Ticket not found or you do not have permission to view it' };
+    }
+    
+    return { 
+      success: true, 
+      data: ticket
+    };
+  } catch (error) {
+    console.error('Error fetching ticket:', error);
+    return { 
+      success: false, 
+      error: 'Failed to fetch ticket details. Please try again.'
+    };
+  }
+}

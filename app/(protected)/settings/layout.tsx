@@ -33,13 +33,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             setActiveTab("Requests")
         } else if (pathname.includes("/settings/subscriptions")) {
             setActiveTab("Subscription")
+        }else if (pathname.includes("/settings/support")) {
+            setActiveTab("Support")
         }else {
             setActiveTab("Account")
         }
     }, [pathname])
     
     return (
-        <div className="flex flex-col w-full min-h-screen bg-gradient-to-b from-background to-background/80">
+        <div className="flex flex-col w-full min-h-screen">
             {/* Navbar - always visible at the top */}
             <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
                 <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -119,6 +121,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             <span className="text-foreground font-medium flex items-center">
                                 {activeTab === "Requests" && <FileText className="h-4 w-4 mr-1" />}
                                 {activeTab === "Subscription" && <CreditCard className="h-4 w-4 mr-1" />}
+                                {activeTab === "Support" && <HelpCircle className="h-4 w-4 mr-1" />}
                                 {activeTab}
                             </span>
                         </>
@@ -136,6 +139,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                 {activeTab === "Account" && "Manage your account settings, preferences, and subscription."}
                                 {activeTab === "Requests" && "View and manage your pending and past requests."}
                                 {activeTab === "Subscription" && "Manage your subscription plan and billing information."}
+                                {activeTab === "Support" && "View and manage your support tickets."}
                             </p>
                         </div>
                         <div className="hidden md:flex items-center gap-3">
@@ -191,7 +195,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                         Documentation
                                     </Link>
                                     <Link 
-                                        href="/contact" 
+                                        href="/help/contact" 
                                         className="text-sm px-3 py-2 rounded-md bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors flex items-center gap-2 w-full"
                                     >
                                         <Mail className="h-4 w-4" />

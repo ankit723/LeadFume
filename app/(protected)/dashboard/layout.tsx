@@ -9,6 +9,7 @@ import ClientSearchBar from "@/app/components/dashboard/ClientSearchBar";
 import MobileSidebar from "@/app/components/dashboard/MobileSidebar";
 import ClientUserButton from "@/app/components/dashboard/ClientUserButton";
 import { getUser } from "@/app/actions";
+import ActiveFiltersDisplay from "@/app/components/dashboard/ActiveFiltersDisplay";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
     const user = await getUser()
@@ -67,6 +68,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                     </div>
                 </header>
                 <main className="flex flex-1 flex-col overflow-y-auto px-4 py-6 lg:px-6 lg:py-8">
+                    <ActiveFiltersDisplay />
                     {children}
                 </main>
             </div>

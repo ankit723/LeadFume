@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/themeProvider";
 import { Toaster } from "@/components/ui/sonner"
 import Footer from "./components/ui/Footer";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,49 +13,38 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Leadfume - Build your leads with ease",
-  description: "Leadfume helps you generate and manage high-quality leads efficiently. Our platform streamlines your lead generation process for better conversions.",
-  keywords: ["lead generation", "sales leads", "marketing leads", "CRM", "lead management", "B2B leads"],
-  authors: [{ name: "Leadfume" }],
-  creator: "Leadfume",
-  publisher: "Leadfume",
-  metadataBase: new URL('https://leadfume.com'), // Replace with your actual domain
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: "Leadfume - Build your leads with ease",
-    description: "Leadfume helps you generate and manage high-quality leads efficiently. Our platform streamlines your lead generation process for better conversions.",
-    url: 'https://leadfume.com', // Replace with your actual domain
-    siteName: 'Leadfume',
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: '/og-image.jpg', // Create and add this image to your public folder
-        width: 1200,
-        height: 630,
-        alt: 'Leadfume - Lead Generation Platform',
-      }
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: "Leadfume - Build your leads with ease",
-    description: "Leadfume helps you generate and manage high-quality leads efficiently. Our platform streamlines your lead generation process for better conversions.",
-    images: ['/og-image.jpg'], // Same as OpenGraph image
-  },
+  title: "Leadfume by Tech Morphers",
+  description: "Leadfume is a leading lead finding software used by various buisness accross the globe, developed by  the Tech Morphers which is a software development company that builds custom software solutions for businesses.",
+  keywords: ["Leafume", "lead generation", "lead finding", "software development", "custom software", "software solutions", "business software", "software company", "Technology Solutions", "Software Development Company", "Custom Software Development", "Software Solutions for Businesses", "Technology Company"],
+  authors: [{ name: "Tech ", url: "https://www.techmorphers.com" }],
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
   },
+  openGraph: {
+    title: "Leadfume by Tech Morphers",
+    url: "https://leadfume.techmorphers.com",
+    description: "Leadfume is a leading lead finding software used by various buisness accross the globe, developed by  the Tech Morphers which is a software development company that builds custom software solutions for businesses.",
+    siteName: "Leadfume",
+    images: [{ url: "https://www.techmorphers.com/og-image.png", width: 1200, height: 630, alt: "Tech Morphers" }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tech Morphers",
+    description: "Tech Morphers is a software development company that builds custom software solutions for businesses.",
+    images: [{ url: "https://www.techmorphers.com/og-image.png" }],
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
+  alternates: {
+    canonical: "https://leadfume.techmorphers.com",
+  },
+  category: "technology",
+  creator: "Tech Morphers",
+  publisher: "Tech Morphers",
 };
 
 export default function RootLayout({
@@ -62,6 +52,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Tech Morphers",
+    url: "https://leadfume.techmorphers.com",
+    logo: "https://www.techmorphers.com/og-image.png",
+    sameAs: [
+      "https://x.com/techmorphers",
+      "https://www.linkedin.com/company/leadfume",
+      "https://www.facebook.com/leadfume",
+      "https://www.instagram.com/leadfume",
+    ],
+  }
   return (
     <ClerkProvider
       appearance={{
@@ -72,24 +75,9 @@ export default function RootLayout({
     >
       <html lang="en" suppressHydrationWarning>
         <head>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "Organization",
-                "name": "Leadfume",
-                "url": "https://leadfume.com",
-                "logo": "https://leadfume.com/logo.png",
-                "sameAs": [
-                  "https://twitter.com/leadfume",
-                  "https://www.linkedin.com/company/leadfume",
-                  "https://www.facebook.com/leadfume"
-                ],
-                "description": "Leadfume helps you generate and manage high-quality leads efficiently. Our platform streamlines your lead generation process for better conversions."
-              })
-            }}
-          />
+          <link rel="canonical" href="https://leadfume.techmorphers.com" />
+
+          <Script id="json-ld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </head>
         <body
           className={`${geistSans.className} antialiased bg-[whitesmoke] dark:bg-[hsl(0,0%,10%)]`}
@@ -98,7 +86,6 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="white"
             enableSystem
-            disableTransitionOnChange
             storageKey="leadfume-theme"
           >
             {children}

@@ -2,7 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { navLinks } from '@/app/config/navigation'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Lock } from 'lucide-react'
 
@@ -12,6 +12,15 @@ interface DashboardItemsProps {
 
 const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
     const pathname = usePathname()
+    const searchParams = useSearchParams()
+    const currentParams = searchParams.toString()
+
+    const createLink = (baseHref: string) => {
+        if (currentParams) {
+            return `${baseHref}?${currentParams}`;
+        }
+        return baseHref;
+    };
     
     return (
         <div className='flex flex-col gap-4 p-2'>
@@ -19,7 +28,7 @@ const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
                 <div key={key} className="flex flex-col gap-1">
                     {/* Category Header */}
                     <Link 
-                        href={category.url} 
+                        href={createLink(category.url)}
                         className={cn('bg-primary dark:bg-primary/90 text-primary-foreground dark:text-primary-foreground/90 flex items-center gap-2 px-2 py-2 rounded-md transition-all text-sm')}
                         onClick={onItemClick}
                     >
@@ -33,7 +42,7 @@ const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
                         {category.items.map((item) => (
                             <Link
                                 key={item.name}
-                                href={`${item.locked ? '/pricing' : item.href}`}
+                                href={createLink(item.locked ? '/pricing' : item.href)}
                                 onClick={onItemClick}
                                 className={cn(
                                     pathname === item.href 

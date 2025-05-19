@@ -48,11 +48,14 @@ model User {
   creditsAvailable Int @default(1000)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  supportTickets SupportTicket[]
+  ticketReplies TicketReply[]
 }
 
 enum EmployeeRole {
   ADMIN
   EMPLOYEE
+  SUPPORT
 }
 
 model Employee {
@@ -70,6 +73,9 @@ model Employee {
   updatedAt DateTime @updatedAt
   pendingOrders  Request[] @relation("PendingOrders")
   completedOrders  Request[] @relation("CompletedOrders")
+  assignedTickets SupportTicket[] @relation("AssignedTickets")
+  resolvedTickets SupportTicket[] @relation("ResolvedTickets")
+  ticketReplies TicketReply[]
 }
 
 enum RequestStatus {
@@ -106,5 +112,79 @@ model ContactForm {
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_USER_REPLY
+  RESOLVED
+  CLOSED
+}
+
+enum TicketCategory {
+  TECHNICAL
+  BILLING
+  ACCOUNT
+  DATA_QUALITY
+  FEATURE_REQUEST
+  OTHER
+}
+
+model SupportTicket {
+  id           String        @id @default(uuid())
+  ticketNumber String        @unique
+  subject      String
+  description  String        @db.Text
+  category     TicketCategory
+  priority     TicketPriority @default(MEDIUM)
+  status       TicketStatus   @default(OPEN)
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  assignedEmployeeId String?
+  assignedEmployee   Employee? @relation(fields: [assignedEmployeeId], references: [id], name: "AssignedTickets")
+  resolvedEmployeeId String?
+  resolvedEmployee   Employee? @relation(fields: [resolvedEmployeeId], references: [id], name: "ResolvedTickets")
+  replies      TicketReply[]
+  attachments  TicketAttachment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  resolvedAt   DateTime?
+  closedAt     DateTime?
+}
+
+model TicketReply {
+  id          String        @id @default(uuid())
+  message     String        @db.Text
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?         @relation(fields: [userId], references: [id])
+  employeeId  String?
+  employee    Employee?     @relation(fields: [employeeId], references: [id])
+  isInternal  Boolean       @default(false)
+  attachments TicketAttachment[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model TicketAttachment {
+  id          String        @id @default(uuid())
+  fileName    String
+  fileUrl     String
+  fileSize    Int
+  fileType    String
+  ticketId    String?
+  ticket      SupportTicket? @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  replyId     String?
+  reply       TicketReply?   @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
 }
  

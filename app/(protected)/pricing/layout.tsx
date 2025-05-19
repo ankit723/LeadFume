@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import ClientSearchBar from "@/app/components/dashboard/ClientSearchBar";
 import MobileSidebar from "@/app/components/dashboard/MobileSidebar";
 import ClientUserButton from "@/app/components/dashboard/ClientUserButton";
+import { Suspense } from 'react';
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
 
@@ -23,7 +24,9 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                     </div>
                     <div className="flex-1 overflow-y-auto">
                         <nav className="grid items-start text-sm font-medium">
-                            <ClientDashboardItems />
+                            <Suspense fallback={null}>
+                                <ClientDashboardItems />
+                            </Suspense>
                         </nav>
                     </div>
                 </div>
@@ -31,11 +34,15 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             <div className="flex flex-col">
                 <header className="flex h-14 items-center gap-2 md:gap-4 border-b px-2 md:px-4 lg:h-[60px] lg:px-6 bg-white dark:bg-background">
                     {/* Mobile Sidebar Component */}
-                    <MobileSidebar />
+                    <Suspense fallback={null}>
+                        <MobileSidebar />
+                    </Suspense>
                     
                     <div className="w-full flex-1">
                         <div className="max-w-md w-full">
-                            <ClientSearchBar />
+                            <Suspense fallback={null}>
+                                <ClientSearchBar />
+                            </Suspense>
                         </div>
                     </div>
                     <div className="ml-auto flex items-center gap-x-5">
@@ -55,6 +62,12 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                         </span>
                         Run AI Prompt
                         </Button>
+
+                        <Link href={"/dashboard"} className="hidden sm:block">
+                            <Button variant="secondary" className="bg-primary/80 cursor-pointer hover:bg-primary/90 transition-all duration-200 hover:shadow-xl hover:shadow-primary/25">
+                                Dashboard
+                            </Button>
+                        </Link>
 
                         <ThemeToggle />
                         <ClientUserButton />

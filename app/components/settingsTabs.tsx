@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
-import { User, FileText, CreditCard } from "lucide-react"
+import { User, FileText, CreditCard, HelpCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 
@@ -21,6 +21,7 @@ const SettingsTabs = () => {
     const getActiveTab = () => {
         if (pathname.includes("/settings/requests")) return "requests"
         if (pathname.includes("/settings/subscriptions")) return "subscriptions"
+        if (pathname.includes("/settings/support")) return "support"
         return "account"
     }
     
@@ -34,7 +35,7 @@ const SettingsTabs = () => {
                 <Link href="/settings" className="flex-1 min-w-[100px]">
                     <TabsTrigger 
                         value="account" 
-                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
+                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-primary/80 hover:bg-primary/10 cursor-pointer dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
                         data-active={getActiveTab() === "account"}
                     >
                         <User className="h-4 w-4" />
@@ -45,7 +46,7 @@ const SettingsTabs = () => {
                 <Link href="/settings/requests" className="flex-1 min-w-[100px]">
                     <TabsTrigger 
                         value="requests" 
-                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
+                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-primary/80 hover:bg-primary/10 cursor-pointer dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
                         data-active={getActiveTab() === "requests"}
                     >
                         <FileText className="h-4 w-4" />
@@ -56,12 +57,23 @@ const SettingsTabs = () => {
                 <Link href="/settings/subscriptions" className="flex-1 min-w-[100px]">
                     <TabsTrigger 
                         value="subscriptions" 
-                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
+                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-primary/80 hover:bg-primary/10 cursor-pointer dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
                         data-active={getActiveTab() === "subscriptions"}
                     >
                         <CreditCard className="h-4 w-4" />
                         <span className="hidden sm:inline">Subscription</span>
                         {getActiveTab() === "subscriptions" && <Badge variant="secondary" className="ml-auto hidden lg:inline-flex h-5 px-1.5">Premium</Badge>}
+                    </TabsTrigger>
+                </Link>
+                <Link href="/settings/support" className="flex-1 min-w-[100px]">
+                    <TabsTrigger 
+                        value="support" 
+                        className="flex items-center gap-2 w-full h-10 data-[state=active]:bg-primary/80 hover:bg-primary/10 cursor-pointer dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm transition-all"
+                        data-active={getActiveTab() === "support"}
+                    >
+                        <HelpCircle className="h-4 w-4" />
+                        <span className="hidden sm:inline">Support</span>
+                        {getActiveTab() === "support" && <Badge variant="secondary" className="ml-auto hidden lg:inline-flex h-5 px-1.5">3 New</Badge>}
                     </TabsTrigger>
                 </Link>
             </TabsList>

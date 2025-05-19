@@ -1,17 +1,20 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from 'react';
 
 const SearchBar = () => {
   const router = useRouter();
+  const currentSearchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if(e.key === 'Enter') {
-      router.push(`/customize?query=${searchQuery}`);
+      const newParams = new URLSearchParams(currentSearchParams.toString());
+      newParams.set('query', searchQuery);
+      router.push(`/customize?${newParams.toString()}`);
     }
   };
 
