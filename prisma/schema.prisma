@@ -11,6 +11,7 @@ datasource db {
 
 model SubscriptionType {
   id String @id @default(uuid())
+  priceId Json? @default("{}")
   name String @default("")
   description String @default("")
   price Int
@@ -23,18 +24,26 @@ model SubscriptionType {
   subscriptions Subscriptions[]
 }
 
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model Subscriptions {
   id String @id @default(uuid())
+  userId String @unique
+  user User @relation("UserSubscriptions", fields: [userId], references: [id])
   subscriptionType SubscriptionType @relation(fields: [subscriptionTypeId], references: [id])
   subscriptionTypeId String
+  status SubscriptionStatus @default(ACTIVE)
   price Int
   subscriptionStartDate DateTime
   subscriptionRenewalDate DateTime
-  users User[]
 }
 
 model User {
   id           String @id @default(uuid())
+  customerId String? @unique
   email        String @unique
   firstName    String
   lastName     String
@@ -43,12 +52,11 @@ model User {
   dateOfBirth  String
   gender       String
   orders  Request[]
-  subscriptionId String?
-  subscription Subscriptions? @relation(fields: [subscriptionId], references: [id])
+  subscription Subscriptions? @relation("UserSubscriptions")
   creditsAvailable Int @default(1000)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  supportTickets SupportTicket[]
+  supportTickets SupportTicket[] 
   ticketReplies TicketReply[]
 }
 

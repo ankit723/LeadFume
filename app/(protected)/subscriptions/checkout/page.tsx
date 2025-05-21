@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getSubscriptionTypes, purchaseSubscription, getUserSubscription } from '@/app/actions';
+import { getSubscriptionTypes, getUserSubscription, getUser } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -11,31 +11,36 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, CheckCircle2, ArrowLeft, CreditCard, Package } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { SubscriptionType as PrismaSubscriptionType } from '@prisma/client';
 
-type SubscriptionType = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  credits: number;
-  annualDiscount: number;
-  isPopular: boolean;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
+
+// Define a more specific type for our processed subscription types
+interface ProcessedSubscriptionType extends Omit<PrismaSubscriptionType, 'priceId'> {
+  priceId: {
+    monthly: string;
+    yearly: string;
+  };
+}
 
 function CheckoutContent() {
-  const [subscriptionTypes, setSubscriptionTypes] = useState<SubscriptionType[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [subscriptionTypes, setSubscriptionTypes] = useState<ProcessedSubscriptionType[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isPurchasing, setIsPurchasing] = useState(false);
   const [currentSubscription, setCurrentSubscription] = useState<any>(null);
   const [isAnnual, setIsAnnual] = useState(false);
+  const [priceId, setPriceId] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const user = await getUser();
+      setUser(user);
+    }
+    loadUser();
+  }, [])
   
-  // Get the selected plan from URL query param if available
   useEffect(() => {
     const planId = searchParams.get('plan');
     if (planId) {
@@ -59,18 +64,32 @@ function CheckoutContent() {
           // Make sure to handle potentially missing data and properties
           const activeTypes = typesResult.data
             .filter((type: any) => type && type.isActive === true)
-            .map((type: any) => ({
-              id: type.id || '',
-              name: type.name || '',
-              description: type.description || '',
-              price: type.price || 0,
-              credits: type.credits || 0,
-              annualDiscount: type.annualDiscount || 0,
-              isPopular: !!type.isPopular,
-              isActive: !!type.isActive,
-              createdAt: type.createdAt?.toString() || new Date().toString(),
-              updatedAt: type.updatedAt?.toString() || new Date().toString(),
-            }));
+            .map((type: any) => {
+              let monthlyLink = '';
+              let yearlyLink = '';
+              // Safely parse paymentLink which is a JSON field
+              if (type.priceId && typeof type.priceId === 'object' && type.priceId !== null) {
+                const pl = type.priceId as { monthly?: string, yearly?: string };
+                monthlyLink = pl.monthly || '';
+                yearlyLink = pl.yearly || '';
+              }
+              return {
+                id: type.id || '',
+                priceId: { // Ensure this structure is consistent
+                  monthly: monthlyLink,
+                  yearly: yearlyLink,
+                },
+                name: type.name || '',
+                description: type.description || '',
+                price: type.price || 0,
+                credits: type.credits || 0,
+                annualDiscount: type.annualDiscount || 0,
+                isPopular: !!type.isPopular,
+                isActive: !!type.isActive,
+                createdAt: type.createdAt?.toString() || new Date().toString(),
+                updatedAt: type.updatedAt?.toString() || new Date().toString(),
+              };
+            });
           
           setSubscriptionTypes(activeTypes);
           
@@ -82,8 +101,10 @@ function CheckoutContent() {
         
         // Load user's current subscription
         const userSubResult = await getUserSubscription();
-        if (userSubResult.success && userSubResult.data) {
+        if (userSubResult.success && userSubResult.data && userSubResult.data.subscription) {
           setCurrentSubscription(userSubResult.data.subscription);
+          // The paymentLink state will be set by a dedicated useEffect below,
+          // based on selectedPlan and isAnnual, not directly from currentSubscription here.
         }
       } catch (error) {
         console.error('Error loading data:', error);
@@ -96,30 +117,19 @@ function CheckoutContent() {
     loadData();
   }, [selectedPlan]);
   
-  const handlePurchase = async () => {
-    if (!selectedPlan) {
-      toast.error('Please select a subscription plan.');
-      return;
-    }
-    
-    setIsPurchasing(true);
-    try {
-      // Pass the billing cycle preference to the backend
-      const result = await purchaseSubscription(selectedPlan, isAnnual);
-      if (result.success) {
-        toast.success(`${isAnnual ? 'Annual' : 'Monthly'} subscription purchased successfully!`);
-        // Redirect to account or subscriptions page
-        router.push('/subscriptions');
+  useEffect(() => {
+    if (selectedPlan && subscriptionTypes.length > 0) {
+      const planDetails = subscriptionTypes.find(p => p.id === selectedPlan);
+      if (planDetails && planDetails.priceId) { // Added null check for planDetails.paymentLink for safety, though it should always exist by construction
+        const link = isAnnual ? planDetails.priceId.yearly : planDetails.priceId.monthly;
+        setPriceId(link || null); // Set to null if link is an empty string
       } else {
-        toast.error(result.error || 'Failed to purchase subscription.');
+        setPriceId(null); // Plan not found
       }
-    } catch (error) {
-      console.error('Error purchasing subscription:', error);
-      toast.error('An error occurred during subscription purchase.');
-    } finally {
-      setIsPurchasing(false);
+    } else {
+      setPriceId(null); // No plan selected, or types not loaded
     }
-  };
+  }, [selectedPlan, isAnnual, subscriptionTypes]);
   
   const selectedSubscriptionType = subscriptionTypes.find(type => type.id === selectedPlan);
   const selectedTypeCredits = selectedSubscriptionType?.credits || 0;
@@ -129,7 +139,7 @@ function CheckoutContent() {
   const isDowngrade = currentSubscription && selectedTypeCredits < currentTypeCredits;
 
   // Calculate annual price with discount
-  const getAnnualPrice = (plan: SubscriptionType) => {
+  const getAnnualPrice = (plan: ProcessedSubscriptionType) => {
     const monthlyPrice = plan.price;
     const annualDiscount = plan.annualDiscount || 0;
     const annualPrice = monthlyPrice * 12 * (1 - annualDiscount / 100);
@@ -137,13 +147,13 @@ function CheckoutContent() {
   };
 
   // Calculate monthly equivalent for annual plans
-  const getMonthlyEquivalent = (plan: SubscriptionType) => {
+  const getMonthlyEquivalent = (plan: ProcessedSubscriptionType) => {
     const annualPrice = parseFloat(getAnnualPrice(plan));
     return (annualPrice / 12).toFixed(2);
   };
 
   // Get savings amount for annual plans
-  const getAnnualSavings = (plan: SubscriptionType) => {
+  const getAnnualSavings = (plan: ProcessedSubscriptionType) => {
     const monthlyTotal = plan.price * 12;
     const annualPrice = parseFloat(getAnnualPrice(plan));
     return (monthlyTotal - annualPrice).toFixed(2);
@@ -156,6 +166,36 @@ function CheckoutContent() {
         <span className="text-lg font-medium">Loading subscription details...</span>
       </div>
     );
+  }
+
+  const handlePurchase = async () => {
+    if (!selectedPlan) {
+      toast.error('Please select a plan.');
+      return;
+    }
+
+    if (!priceId) {
+      toast.error('Price ID not found.');
+      return;
+    }
+
+    const payment = await fetch('/api/payment/subscription', {
+      method: 'POST',
+      body: JSON.stringify({
+        subscriptionTypeID: selectedPlan,
+        priceId: priceId,
+        isAnnual: isAnnual,
+        user: user
+      }),
+    });
+    
+    if (payment.ok) {
+      toast.success('Purchase successful. Redirecting to payment page...');
+      const data = await payment.json();
+      router.push(data.url);
+    } else {
+      toast.error('Purchase failed. Please try again.');
+    }
   }
   
   return (
@@ -390,18 +430,10 @@ function CheckoutContent() {
               <CardFooter className="pt-2">
                 <Button 
                   className="w-full py-6 text-base font-semibold" 
-                  disabled={!selectedPlan || isPurchasing}
+                  disabled={!selectedPlan}
                   onClick={handlePurchase}
                 >
-                  {isPurchasing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : currentSubscription 
-                      ? `Change to ${isAnnual ? 'Annual' : 'Monthly'} Subscription` 
-                      : `Purchase ${isAnnual ? 'Annual' : 'Monthly'} Subscription`
-                  }
+                  {selectedPlan ? `Purchase ${isAnnual ? 'Annual' : 'Monthly'} Subscription` : 'Select a Plan'}
                 </Button>
               </CardFooter>
             </Card>

@@ -30,19 +30,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-
-type SubscriptionType = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  credits: number;
-  annualDiscount: number;
-  isPopular: boolean;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
+import { SubscriptionType } from '@prisma/client';
 
 const AdminSubscriptionsPage = () => {
   const [subscriptionTypes, setSubscriptionTypes] = useState<SubscriptionType[]>([]);
@@ -71,6 +59,7 @@ const AdminSubscriptionsPage = () => {
         if (result.success && result.data) {
           const formattedData = result.data.map((type: any) => ({
             id: type.id || '',
+            priceId: type.priceId || {},
             name: type.name || '',
             description: type.description || '',
             price: type.price || 0,
@@ -316,6 +305,23 @@ const AdminSubscriptionsPage = () => {
                     <div>
                       <p className="text-sm text-muted-foreground">Annual Discount</p>
                       <p className="font-medium">{subscription.annualDiscount}%</p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-sm text-muted-foreground">Payment Link</p>
+                      <div className="font-medium max-h-24 overflow-y-auto text-xs">
+                        {subscription.priceId && typeof subscription.priceId === 'object' ? (
+                          <div className="border rounded p-2 bg-slate-50">
+                            {Object.entries(subscription.priceId).map(([key, value]) => (
+                              <div key={key} className="grid grid-cols-5 gap-2 py-1 border-b last:border-0">
+                                <span className="font-semibold text-slate-700 col-span-1 capitalize">{key}:</span>
+                                <a href={typeof value === 'object' ? JSON.stringify(value) : String(value)} className="col-span-4 hover:underline text-blue-700">{typeof value === 'object' ? JSON.stringify(value) : String(value)}</a>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p>No payment link data</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

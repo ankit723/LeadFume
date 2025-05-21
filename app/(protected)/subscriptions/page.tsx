@@ -2,23 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUserSubscription, cancelSubscription } from '@/app/actions';
+import { getUserSubscription } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
-import { Loader2, AlertCircle, CreditCard, Package, CalendarClock, Receipt, ArrowUpRight, Sparkles } from 'lucide-react';
-import { 
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import { Loader2, AlertCircle, CreditCard, Package, CalendarClock, ArrowUpRight, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 // Define proper types for our data
@@ -43,6 +32,7 @@ type Subscription = {
 type User = {
   id: string;
   creditsAvailable: number;
+  customerId: string;
   // Other user properties can be added as needed
 };
 
@@ -54,7 +44,6 @@ type UserSubscriptionData = {
 
 const SubscriptionPage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isCancelling, setIsCancelling] = useState(false);
   const [userData, setUserData] = useState<UserSubscriptionData | null>(null);
   const router = useRouter();
   
@@ -68,6 +57,7 @@ const SubscriptionPage = () => {
           const formattedData: UserSubscriptionData = {
             user: {
               id: result.data.user?.id || '',
+              customerId: result.data.user?.customerId || '',
               creditsAvailable: result.data.user?.creditsAvailable || 0,
             },
             subscription: result.data.subscription ? {
@@ -111,25 +101,7 @@ const SubscriptionPage = () => {
     
     loadSubscription();
   }, []);
-  
-  const handleCancelSubscription = async () => {
-    setIsCancelling(true);
-    try {
-      const result = await cancelSubscription();
-      if (result.success) {
-        toast.success('Subscription cancelled successfully.');
-        // Reload the page to reflect changes
-        window.location.reload();
-      } else {
-        toast.error(result.error || 'Failed to cancel subscription.');
-      }
-    } catch (error) {
-      console.error('Error cancelling subscription:', error);
-      toast.error('Failed to cancel subscription.');
-    } finally {
-      setIsCancelling(false);
-    }
-  };
+
   
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
@@ -165,6 +137,22 @@ const SubscriptionPage = () => {
     
     return diffMonths >= 6;
   };
+
+  const handleManageSubscription = async () => {
+    const manageSubscriptionUrl = await fetch('/api/payment/create-portal-session', {
+      method: 'POST',
+      body: JSON.stringify({customerId: userData?.user.customerId}),
+    });
+
+    const data = await manageSubscriptionUrl.json();
+    
+    if (data.sessionUrl) {
+      window.location.href = data.sessionUrl;
+    } else {
+      console.error('No session URL returned from Stripe');
+      toast.error('Failed to create billing portal session');
+    }
+  }
   
   if (isLoading) {
     return (
@@ -340,42 +328,8 @@ const SubscriptionPage = () => {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-between gap-4 border-t bg-muted/10 p-4">
-                <Button 
-                  variant="outline"
-                  onClick={() => router.push('/subscriptions/checkout')}
-                  className="flex-1"
-                >
-                  Change Plan
-                </Button>
-                
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" disabled={isCancelling} className="flex-1">
-                      {isCancelling ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Cancelling...
-                        </>
-                      ) : 'Cancel Subscription'}
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will cancel your subscription. You will maintain access until the end of your current billing period
-                        on {formatDate(subscription?.subscriptionRenewalDate)}, but your subscription will not auto-renew.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>No, keep my subscription</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleCancelSubscription}>
-                        Yes, cancel my subscription
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+              <CardFooter className="w-full flex justify-center items-center">
+                <Button onClick={()=>handleManageSubscription()}>Manage Subscription</Button>
               </CardFooter>
             </Card>
             
@@ -394,7 +348,7 @@ const SubscriptionPage = () => {
                   <div className="relative mb-6">
                     <div className="w-36 h-36 rounded-full border-8 border-primary/20 flex items-center justify-center mb-3">
                       <div className="text-center">
-                        <div className="text-4xl font-bold text-primary">
+                        <div className="text-3xl font-bold text-primary">
                           {creditsAvailable.toLocaleString()}
                         </div>
                         <p className="text-xs text-muted-foreground">of {isSubscriptionAnnual ? totalAnnualCredits.toLocaleString() : totalCredits.toLocaleString()}</p>
@@ -444,60 +398,9 @@ const SubscriptionPage = () => {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="border-t bg-muted/10 p-4">
-                <Button 
-                  className="w-full" 
-                  onClick={() => router.push('/pricing')}
-                  variant="outline"
-                >
-                  View Credit Packages
-                </Button>
-              </CardFooter>
             </Card>
           </div>
         )}
-        
-        <div className="mt-10">
-          <Card className="border-2 shadow-lg">
-            <CardHeader className="border-b bg-muted/30">
-              <CardTitle className="flex items-center gap-2">
-                <Receipt className="h-5 w-5 text-primary" />
-                <span>Billing History</span>
-              </CardTitle>
-              <CardDescription>
-                View your past transactions and invoices
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="py-6">
-              <div className="rounded-lg border overflow-hidden">
-                <div className="bg-muted/30 p-3 text-sm font-medium grid grid-cols-4 gap-4">
-                  <div>Date</div>
-                  <div>Description</div>
-                  <div>Amount</div>
-                  <div className="text-right">Status</div>
-                </div>
-                <div className="divide-y">
-                  {hasSubscription ? (
-                    <div className="p-3 text-sm grid grid-cols-4 gap-4">
-                      <div>{formatDate(subscription?.subscriptionStartDate)}</div>
-                      <div>Subscription - {subscriptionType?.name}</div>
-                      <div>${subscription?.price}</div>
-                      <div className="text-right">
-                        <Badge className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Paid</Badge>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-8 text-center">
-                      <p className="text-muted-foreground">
-                        Your billing history will appear here once you subscribe to a plan
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );

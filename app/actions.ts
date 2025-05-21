@@ -449,6 +449,7 @@ export async function purchaseSubscription(subscriptionTypeId: string, isAnnual:
         // Create the subscription
         const subscription = await prisma.subscriptions.create({
             data: {
+                userId: userId,
                 subscriptionTypeId,
                 price: price,
                 subscriptionStartDate: startDate,
@@ -463,7 +464,6 @@ export async function purchaseSubscription(subscriptionTypeId: string, isAnnual:
         const user = await prisma.user.update({
             where: { id: userId },
             data: {
-                subscriptionId: subscription.id,
                 creditsAvailable: creditAllocation,
             }
         });
@@ -489,22 +489,14 @@ export async function cancelSubscription() {
             include: { subscription: true }
         });
         
-        if (!user || !user.subscriptionId) {
+        if (!user || !user.subscription) {
             throw new Error("No active subscription found");
         }
         
         // Update the user to remove subscription
-        await prisma.user.update({
-            where: { id: userId },
-            data: {
-                subscriptionId: null,
-                // You might want to keep remaining credits or reset to 0 depending on your business logic
-                // creditsAvailable: 0,
-            }
+        await prisma.subscriptions.delete({
+            where: { id: user.subscription.id } 
         });
-        
-        // Here you might want to add logic to mark the subscription as cancelled
-        // but still keep it valid until the renewal date
         
         return { success: true };
     } catch (error) {
