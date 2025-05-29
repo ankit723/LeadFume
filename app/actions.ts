@@ -18,7 +18,11 @@ export async function getUser() {
         id: userId,
         },
         include: {
-            subscription: true,
+            subscription: {
+                include: {
+                    subscriptionType: true,
+                },
+            },
         },
     });
     console.log(user)

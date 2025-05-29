@@ -10,11 +10,29 @@ import MobileSidebar from "@/app/components/dashboard/MobileSidebar";
 import ClientUserButton from "@/app/components/dashboard/ClientUserButton";
 import { getUser } from "@/app/actions";
 import ActiveFiltersDisplay from "@/app/components/dashboard/ActiveFiltersDisplay";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+
+const checkIsAnnual = (startDate?: string, renewalDate?: string): boolean => {
+    if (!startDate || !renewalDate) return false;
+    
+    const start = new Date(startDate);
+    const renewal = new Date(renewalDate);
+    
+    // If renewal date is more than 6 months ahead, consider it annual
+    const diffMonths = (renewal.getFullYear() - start.getFullYear()) * 12 + 
+                       (renewal.getMonth() - start.getMonth());
+    
+    return diffMonths >= 6;
+  };
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
     const user = await getUser()
     const isUserPremium = user?.subscription
-    console.log("isUserPremium", isUserPremium)
+    const isAnnual = checkIsAnnual(user?.subscription?.subscriptionStartDate?.toString(), user?.subscription?.subscriptionRenewalDate?.toString())
 
 
     return (
@@ -64,7 +82,62 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                         </Button>
 
                         <ThemeToggle />
+                        
                         <ClientUserButton />
+
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant="secondary" className="bg-primary/80 cursor-pointer hover:bg-primary/90 transition-all duration-200 hover:shadow-xl hover:shadow-primary/25">Show Subscription Details</Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80">
+                                <div className="grid gap-4">
+                                    {user?.subscription ? (
+                                        <>
+                                            <div className="space-y-2">
+                                                <h4 className="font-medium leading-none">Subscription Details</h4>
+                                                <p className="text-sm text-muted-foreground">
+                                                    View your current plan details.
+                                                </p>
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <div className="grid grid-cols-2 items-center gap-4">
+                                                    <span className="text-sm font-medium">Plan:</span>
+                                                    <span className="text-sm text-right">{user.subscription.subscriptionType.name}</span>
+                                                </div>
+                                                <div className="grid grid-cols-2 items-center gap-4">
+                                                    <span className="text-sm font-medium">Status:</span>
+                                                    <span className="text-sm text-right">{user.subscription.status}</span>
+                                                </div>
+                                                <div className="grid grid-cols-2 items-center gap-4">
+                                                    <span className="text-sm font-medium">Price:</span>
+                                                    <span className="text-sm text-right">${user.subscription.price}/{isAnnual ? "year" : "month"}</span>
+                                                </div>
+                                                <div className="grid grid-cols-2 items-center gap-4">
+                                                    <span className="text-sm font-medium">Credits:</span>
+                                                    <span className="text-sm text-right">{user.subscription.subscriptionType.credits}/month</span>
+                                                </div>
+                                                <div className="grid grid-cols-2 items-center gap-4">
+                                                    <span className="text-sm font-medium">Renews on:</span>
+                                                    <span className="text-sm text-right">
+                                                        {new Date(user.subscription.subscriptionRenewalDate).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <h4 className="font-medium leading-none">No Active Subscription</h4>
+                                            <p className="text-sm text-muted-foreground">
+                                                You do not have an active subscription.
+                                            </p>
+                                            <Link href="/pricing">
+                                                <Button className="w-full mt-2">View Plans</Button>
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+                            </PopoverContent>
+                        </Popover>
                     </div>
                 </header>
                 <main className="flex flex-1 flex-col overflow-y-auto px-4 py-6 lg:px-6 lg:py-8">

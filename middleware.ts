@@ -7,7 +7,9 @@ const isPublicRoute = createRouteMatcher([
   '/',
   '/api/payment/webhook(.*)',
   '/api/payment/subscription(.*)',
-  '/api/payment/create-portal-session(.*)'
+  '/api/payment/create-portal-session(.*)',
+  '/sitemap.xml',
+  '/robots.txt',
 ]) 
 
 

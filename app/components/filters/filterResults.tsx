@@ -81,6 +81,7 @@ const ConfirmRequestModal = ({setIsModalOpen, user}:{setIsModalOpen: (isModalOpe
                         <p>Yes</p>
                     </Button>
                 </div>
+                <p className="text-sm text-gray-500">Your lead will be processed within 6 to 8 hours to ensure the highest quality data !</p>
             </div>
         </div>
     )
