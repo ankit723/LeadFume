@@ -1,10 +1,10 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { navLinks } from '@/app/config/navigation'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Lock } from 'lucide-react'
+import { Lock, Users2, Building } from 'lucide-react'
 
 interface DashboardItemsProps {
     onItemClick?: () => void;
@@ -14,6 +14,15 @@ const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const currentParams = searchParams.toString()
+    
+    // Determine current view based on pathname
+    const getCurrentView = () => {
+        if (pathname.startsWith('/dashboard/companies')) return 'companies'
+        if (pathname.startsWith('/dashboard/people')) return 'people'
+        return 'people' // default to people
+    }
+    
+    const [currentView, setCurrentView] = useState<'people' | 'companies'>(getCurrentView())
 
     const createLink = (baseHref: string) => {
         if (currentParams) {
@@ -21,10 +30,46 @@ const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
         }
         return baseHref;
     };
+
+    const toggleView = (view: 'people' | 'companies') => {
+        setCurrentView(view)
+        if (onItemClick) onItemClick()
+    };
     
     return (
         <div className='flex flex-col gap-4 p-2'>
-            {Object.entries(navLinks).map(([key, category]) => (
+            {/* Toggle Buttons */}
+            <div className="flex gap-1 p-1 bg-muted rounded-lg">
+                <button
+                    onClick={() => toggleView('people')}
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-all",
+                        currentView === 'people' 
+                            ? "bg-primary text-primary-foreground shadow-sm" 
+                            : "text-muted-foreground hover:text-foreground hover:bg-background"
+                    )}
+                >
+                    <Users2 className="w-4 h-4" />
+                    People
+                </button>
+                <button
+                    onClick={() => toggleView('companies')}
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-all",
+                        currentView === 'companies' 
+                            ? "bg-primary text-primary-foreground shadow-sm" 
+                            : "text-muted-foreground hover:text-foreground hover:bg-background"
+                    )}
+                >
+                    <Building className="w-4 h-4" />
+                    Companies
+                </button>
+            </div>
+
+            {/* Show only the selected category */}
+            {Object.entries(navLinks)
+                .filter(([key]) => key === currentView)
+                .map(([key, category]) => (
                 <div key={key} className="flex flex-col gap-1">
                     {/* Category Header */}
                     <Link 
@@ -37,7 +82,6 @@ const DashboardItems = ({ onItemClick }: DashboardItemsProps) => {
                     </Link>
                     
                     {/* Category Items */}
-                    {/* add every item to the query parament after the category label */}
                     <div className="flex flex-col gap-1 pl-2">
                         {category.items.map((item) => (
                             <Link

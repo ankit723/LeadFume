@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/logo.png";
+import logo from "@/public/images/LeadFume_2.png";
 import { SendIcon } from "lucide-react";
 import ClientDashboardItems from "@/app/components/dashboard/ClientDashboardItems";
 import { ThemeToggle } from "@/components/ui/themeToggle";

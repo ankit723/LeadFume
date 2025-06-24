@@ -92,79 +92,79 @@ const EmailStatusFilter = () => {
   }
 
   return (
-    <div className="w-[280px] bg-white dark:bg-background p-4 rounded-lg border dark:border-gray-800 shadow-sm">
+    <div className="w-[280px] bg-card p-4 rounded-lg border shadow-sm">
       <div className="space-y-3">
         {/* Email Status Section */}
         <div>
-          <h4 className="text-base text-center font-semibold mb-6 bg-primary dark:bg-primary/70 text-black dark:text-white p-2 rounded-md shadow-sm">
+          <h4 className="text-base text-center font-semibold mb-6 bg-primary text-primary-foreground p-2 rounded-md shadow-sm">
             Email Status
           </h4>
           
           {/* Safe To Send */}
           <div className="space-y-1">
-            <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+            <div className="flex items-center gap-3 hover:bg-muted p-2 rounded-md transition-colors">
               <Checkbox 
                 id="safe-to-send" 
                 checked={currentFilters.safeToSend}
                 onCheckedChange={(checked) => handleFilterChange('safeToSend', checked as boolean)}
               />
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium dark:text-gray-200">Safe To Send</span>
-                <span className="px-2 py-1 text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-md font-medium">Verified</span>
+                <span className="text-sm font-medium">Safe To Send</span>
+                <span className="px-2 py-1 text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded-md font-medium">Verified</span>
               </div>
             </div>
 
             {/* Safe To Caution */}
-            <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+            <div className="flex items-center gap-3 hover:bg-muted p-2 rounded-md transition-colors">
               <Checkbox 
                 id="safe-to-caution" 
                 checked={currentFilters.safeToCaution}
                 onCheckedChange={(checked) => handleFilterChange('safeToCaution', checked as boolean)}
               />
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium dark:text-gray-200">Safe To Caution</span>
-                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-md font-medium">Unverified</span>
+                <span className="text-sm font-medium">Safe To Caution</span>
+                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 rounded-md font-medium">Unverified</span>
               </div>
             </div>
 
             {/* Do Not Send Section */}
-            <div className="space-y-1 border-t dark:border-gray-700 pt-4">
-              <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+            <div className="space-y-1">
+              <div className="flex items-center gap-3 hover:bg-muted p-2 rounded-md transition-colors">
                 <Checkbox 
-                  id="do-not-send-1" 
+                  id="do-not-send-update" 
                   checked={currentFilters.doNotSendUpdate}
                   onCheckedChange={(checked) => handleFilterChange('doNotSendUpdate', checked as boolean)}
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium dark:text-gray-200">Do Not Send</span>
-                  <span className="px-2 py-1 text-xs bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 rounded-md font-medium">Update Required</span>
+                  <span className="text-sm font-medium">Do Not Send - Update Available</span>
+                  <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 rounded-md font-medium">New Data</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+              
+              <div className="flex items-center gap-3 hover:bg-muted p-2 rounded-md transition-colors">
                 <Checkbox 
-                  id="do-not-send-2" 
+                  id="do-not-send-unusable" 
                   checked={currentFilters.doNotSendUnusable}
                   onCheckedChange={(checked) => handleFilterChange('doNotSendUnusable', checked as boolean)}
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium dark:text-gray-200">Do Not Send</span>
-                  <span className="px-2 py-1 text-xs bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 rounded-md font-medium">Unusable</span>
+                  <span className="text-sm font-medium">Do Not Send - Unusable</span>
+                  <span className="px-2 py-1 text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 rounded-md font-medium">Unavailable</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Advanced Section */}
           <Collapsible
             open={isAdvancedOpen}
             onOpenChange={setIsAdvancedOpen}
-            className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+            className="mt-4 pt-4 border-t"
           >
             <div className="flex items-center justify-between mb-6">
-              <h4 className="text-sm font-semibold dark:text-gray-200">Advanced</h4>
-              <CollapsibleTrigger className="group hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors">
+              <h4 className="text-sm font-semibold">Advanced</h4>
+              <CollapsibleTrigger className="group hover:bg-muted p-2 rounded-full transition-colors">
                 <ChevronDown className={cn(
-                  "h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-300",
+                  "h-4 w-4 text-muted-foreground transition-transform duration-300",
                   isAdvancedOpen && "transform rotate-180"
                 )} />
               </CollapsibleTrigger>
@@ -176,13 +176,13 @@ const EmailStatusFilter = () => {
                 isAdvancedOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"
               )}>
                 {/* Include catch-all emails */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium dark:text-gray-200">Include catch-all emails</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 cursor-help">ⓘ</span>
+                      <span className="text-sm font-medium">Include catch-all emails</span>
+                      <span className="text-xs text-muted-foreground cursor-help">ⓘ</span>
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Use Apollo intelligence to identify verified emails from catch-all domains.</p>
+                    <p className="text-xs text-muted-foreground">Use Apollo intelligence to identify verified emails from catch-all domains.</p>
                   </div>
                   <Switch 
                     checked={currentFilters.includeCatchAll}
@@ -191,12 +191,12 @@ const EmailStatusFilter = () => {
                 </div>
 
                 {/* Show only user managed */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium dark:text-gray-200">Show only user managed</span>
+                      <span className="text-sm font-medium">Show only user managed</span>
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Emails that are owned, managed, and updated by you.</p>
+                    <p className="text-xs text-muted-foreground">Emails that are owned, managed, and updated by you.</p>
                   </div>
                   <Switch 
                     checked={currentFilters.showUserManaged}

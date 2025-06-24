@@ -13,9 +13,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <section className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       {/* Desktop Sidebar - hidden on mobile */}
-      <aside className="hidden md:block border-r border-amber-200 dark:border-amber-800/30 bg-gradient-to-b from-white to-amber-50/30 dark:from-background dark:to-amber-950/5">
+      <aside className="hidden md:block border-r bg-card">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b border-amber-200 dark:border-amber-800/30 px-4 lg:h-[60px]">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
             <Link href="/" className="flex items-center gap-2 font-bold">
               <Image src={logo} alt="logo" className="" width={200} height={200}/>
             </Link>
@@ -36,8 +36,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-col">
         <header className={cn(
           "flex h-14 items-center gap-2 md:gap-4 border-b px-2 md:px-4 lg:h-[60px] lg:px-6",
-          "bg-gradient-to-r from-white to-amber-50/30 dark:from-background dark:to-amber-950/5",
-          "border-amber-200 dark:border-amber-800/30"
+          "bg-background"
         )}>
           {/* Mobile Sidebar Component */}
           <AdminMobileSidebar />
@@ -72,7 +71,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <ClientUserButton />
           </div>
         </header>
-        <main className="flex flex-1 flex-col overflow-y-auto px-4 py-6 lg:px-6 lg:py-8 bg-gradient-to-br from-white via-white to-amber-50/20 dark:from-background dark:via-background dark:to-amber-950/5">
+        <main className="flex flex-1 flex-col overflow-y-auto px-4 py-6 lg:px-6 lg:py-8 bg-background">
           {children}
         </main>
       </div>

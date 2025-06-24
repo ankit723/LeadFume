@@ -176,33 +176,33 @@ export async function POST(request: NextRequest) {
             
             break;
         
-            case 'customer.subscription.deleted':
-                const subscription = event.data.object as Stripe.Subscription;
-                const custId = subscription.customer;
-                const subscriptionId = subscription.id;
+        case 'customer.subscription.deleted':
+            const subscription = event.data.object as Stripe.Subscription;
+            const custId = subscription.customer;
+            const subscriptionId = subscription.id;
 
-                const subsUser = await prisma.user.findUnique({
-                    where: { customerId: custId as string }
-                });
+            const subsUser = await prisma.user.findUnique({
+                where: { customerId: custId as string }
+            });
 
-                if (!subsUser) {
-                    console.error(`User not found for customer ID: ${custId}. Subscription ID: ${subscriptionId}`);
-                    return NextResponse.json({ error: 'User not found for customer ID.' }, { status: 404 });
-                }
+            if (!subsUser) {
+                console.error(`User not found for customer ID: ${custId}. Subscription ID: ${subscriptionId}`);
+                return NextResponse.json({ error: 'User not found for customer ID.' }, { status: 404 });
+            }
 
-                await prisma.subscriptions.delete({
-                    where: { userId: subsUser.id }
-                });
+            await prisma.subscriptions.delete({
+                where: { userId: subsUser.id }
+            });
 
-                await prisma.user.update({
-                    where: { id: subsUser.id },
-                    data: { creditsAvailable: 0 }
-                });
+            await prisma.user.update({
+                where: { id: subsUser.id },
+                data: { creditsAvailable: 0 }
+            });
 
-                console.log(`Successfully deleted subscription for user ${subsUser.email} (ID: ${subsUser.id}). Subscription ID: ${subscriptionId}`);
-                break;
-            
-            case 'customer.subscription.updated':
+            console.log(`Successfully deleted subscription for user ${subsUser.email} (ID: ${subsUser.id}). Subscription ID: ${subscriptionId}`);
+            break;
+        
+        case 'customer.subscription.updated':
                 const subs = event.data.object as Stripe.Subscription;
                 const customId = subs.customer;
                 const subsId = subs.id;

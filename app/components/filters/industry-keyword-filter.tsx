@@ -58,10 +58,10 @@ export default function IndustryKeywordFilter() {
 
   // Filters synced with URL
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>(
-    searchParams.getAll('organizationIndustryTagIds[]') || []
+    searchParams.getAll('qOrganizationKeywordTags[]') || []
   )
   const [selectedExcludeIndustries, setSelectedExcludeIndustries] = useState<string[]>(
-    searchParams.getAll('organizationNotIndustryTagIds[]') || []
+    searchParams.getAll('qNotOrganizationKeywordTags[]') || []
   )
   const [includeKeywords, setIncludeKeywords] = useState(
     searchParams.has('qOrganizationKeywordTags[]')
@@ -77,7 +77,7 @@ export default function IndustryKeywordFilter() {
       ? 'known'
       : searchParams.get('notExistFields[]') === 'organization_linkedin_industry_tag_ids-isunknown'
       ? 'unknown'
-      : searchParams.getAll('organizationNotIndustryTagIds[]').length > 0
+      : searchParams.getAll('qNotOrganizationKeywordTags[]').length > 0
       ? 'none'
       : 'known'
   )
@@ -186,14 +186,14 @@ export default function IndustryKeywordFilter() {
       ? selectedIndustries.filter((id) => id !== industryId)
       : [...selectedIndustries, industryId]
     setSelectedIndustries(updated)
-    handleFilterChange({ 'organizationIndustryTagIds[]': updated })
+    handleFilterChange({ 'qOrganizationKeywordTags[]': updated })
     setIsIndustryDropdownOpen(false)
   }
 
   const handleRemoveIndustry = (industryId: string) => {
     const updated = selectedIndustries.filter((id) => id !== industryId)
     setSelectedIndustries(updated)
-    handleFilterChange({ 'organizationIndustryTagIds[]': updated })
+    handleFilterChange({ 'qOrganizationKeywordTags[]': updated })
   }
 
   const handleExcludeIndustrySelect = (industryId: string) => {
@@ -201,14 +201,14 @@ export default function IndustryKeywordFilter() {
       ? selectedExcludeIndustries.filter((id) => id !== industryId)
       : [...selectedExcludeIndustries, industryId]
     setSelectedExcludeIndustries(updated)
-    handleFilterChange({ 'organizationNotIndustryTagIds[]': updated })
+    handleFilterChange({ 'qNotOrganizationKeywordTags[]': updated })
     setIsExcludeIndustryDropdownOpen(false)
   }
 
   const handleRemoveExcludeIndustry = (industryId: string) => {
     const updated = selectedExcludeIndustries.filter((id) => id !== industryId)
     setSelectedExcludeIndustries(updated)
-    handleFilterChange({ 'organizationNotIndustryTagIds[]': updated })
+    handleFilterChange({ 'qNotOrganizationKeywordTags[]': updated })
   }
 
   const handleKeywordSelect = (type: "include" | "includeAll" | "exclude", keyword: string) => {
@@ -374,7 +374,7 @@ export default function IndustryKeywordFilter() {
                 onClick={() => {
                   setAdvancedFilter("none")
                   handleFilterChange({
-                    'organizationNotIndustryTagIds[]': selectedExcludeIndustries.length > 0 ? selectedExcludeIndustries : ['5567ce1f7369643b78570000'],
+                    'qNotOrganizationKeywordTags[]': selectedExcludeIndustries.length > 0 ? selectedExcludeIndustries : ['any_industry'],
                     'existFields[]': '',
                     'notExistFields[]': ''
                   })
@@ -394,7 +394,7 @@ export default function IndustryKeywordFilter() {
                   handleFilterChange({
                     'existFields[]': 'organization_linkedin_industry_tag_ids-isknown',
                     'notExistFields[]': '',
-                    'organizationNotIndustryTagIds[]': ''
+                    'qNotOrganizationKeywordTags[]': ''
                   })
                 }}
               >
@@ -412,7 +412,7 @@ export default function IndustryKeywordFilter() {
                   handleFilterChange({
                     'notExistFields[]': 'organization_linkedin_industry_tag_ids-isunknown',
                     'existFields[]': '',
-                    'organizationNotIndustryTagIds[]': ''
+                    'qNotOrganizationKeywordTags[]': ''
                   })
                 }}
               >

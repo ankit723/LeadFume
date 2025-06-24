@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
                     subscriptionTypeID,
                     isAnnual,
                 },
-                success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscriptions`,
+                success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings/subscriptions`,
                 cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscriptions/checkout`,
             });
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
                 subscriptionTypeID,
                 isAnnual,
             },
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscriptions`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings/subscriptions`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscriptions/checkout`,
         })
         

@@ -10,7 +10,7 @@ export default async function Nav() {
   const user = await getUser()
 
   return (
-    <nav className="flex items-center justify-between px-3 sm:px-4 md:px-8 lg:px-12 py-3 bg-white dark:bg-gray-900 shadow-sm dark:shadow-gray-800/10 h-16">
+    <nav className="flex items-center justify-between px-3 sm:px-4 md:px-8 lg:px-12 py-3 bg-background border-b shadow-sm h-16">
       {/* Logo - Scales Responsively */}
       <div className="">
         <Link href="/">
@@ -26,11 +26,11 @@ export default async function Nav() {
       </div>
 
       {/* Navigation Links - Hidden on Small Screens */}
-      <div className="hidden md:flex text-black dark:text-gray-200 space-x-6 text-sm lg:text-base font-medium">
-        <Link href="/" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Home</Link>
-        <Link href="/service" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Service</Link>
-        <Link href="/contact" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">Contact</Link>
-        <Link href="/policies" className="hover:bg-primary/30 dark:hover:bg-primary/20 py-2 px-4 rounded-lg m-5">policies</Link>
+      <div className="hidden md:flex text-foreground space-x-6 text-sm lg:text-base font-medium">
+        <Link href="/" className="hover:bg-primary/20 py-2 px-4 rounded-lg transition-colors">Home</Link>
+        <Link href="/service" className="hover:bg-primary/20 py-2 px-4 rounded-lg transition-colors">Service</Link>
+        <Link href="/contact" className="hover:bg-primary/20 py-2 px-4 rounded-lg transition-colors">Contact</Link>
+        <Link href="/policies" className="hover:bg-primary/20 py-2 px-4 rounded-lg transition-colors">Policies</Link>
       </div>
 
       {/* Sign-in & Get Started - Buttons Stay Fixed */}
@@ -39,7 +39,7 @@ export default async function Nav() {
       {!user?(
 
         <div className="flex items-center space-x-3 sm:space-x-4">
-        <Link href="/sign-in" className="text-[#008080] dark:text-primary text-xs sm:text-sm font-medium">
+        <Link href="/sign-in" className="text-primary text-xs sm:text-sm font-medium hover:text-primary/80 transition-colors">
           Sign in
         </Link>
         <Link href="/sign-up">

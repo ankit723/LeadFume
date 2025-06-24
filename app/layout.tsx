@@ -80,11 +80,11 @@ export default function RootLayout({
           <Script id="json-ld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </head>
         <body
-          className={`${geistSans.className} antialiased bg-[whitesmoke] dark:bg-[hsl(0,0%,10%)]`}
+          className={`${geistSans.className} antialiased bg-background text-foreground`}
         >
           <ThemeProvider
             attribute="class"
-            defaultTheme="white"
+            defaultTheme="system"
             enableSystem
             storageKey="leadfume-theme"
           >

@@ -15,17 +15,24 @@ const page = async ({params}:PageProps) => {
   const DynamicFilter = filterComponent as React.ComponentType;
 
   return (
-    <div>
-      <div className="flex-1 flex flex-col gap-4 mx-4">
+    <div className="h-screen flex flex-col">
+      {/* Top section with user info */}
+      <div className="flex-shrink-0 mx-4 mb-4">
         <UsersInfo />
       </div>
-      <div className="flex-1 flex flex-wrap gap-4 mx-4">
-        {filterComponent && <DynamicFilter />}  
-        <div className="flex-1 flex flex-col gap-4 mx-4"> 
+      
+      {/* Main content area with filters and results side by side */}
+      <div className="flex-1 flex gap-4 mx-4 min-h-0 overflow-hidden">
+        {/* Filter section - fixed width */}
+        <div className="flex-shrink-0">
+          {filterComponent && <DynamicFilter />}  
+        </div>
+        
+        {/* Results section - flexible width with horizontal scroll */}
+        <div className="flex-1 min-w-0 overflow-x-auto">
           <FilterResults isUserPremium={user?.subscription?true:false} user={user}/>
         </div>
       </div>
-        
     </div>
   )
 }

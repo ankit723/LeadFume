@@ -5,9 +5,9 @@ import TotalUsersDisplay from './TotalUsersDisplay'
 const UsersInfo = async () => {
   const user = await getUser()
   const subscriptionType = user?.subscription?.subscriptionType.name
-  const totalCredits = user?.subscription?.subscriptionType.credits ?? 0
-  const availableCredits = user?.creditsAvailable ?? 0
-  const creditsUsed = totalCredits - availableCredits;
+  const totalCredits = user?.subscription?.subscriptionType.credits ?? 1000
+  const availableCredits = Math.max(0, user?.creditsAvailable ?? 0)
+  const creditsUsed = Math.max(0, totalCredits - availableCredits)
   
   return (
     <div className="space-y-8 w-full my-4">
@@ -25,7 +25,7 @@ const UsersInfo = async () => {
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div 
                 className="bg-blue-600 h-2.5 rounded-full" 
-                style={{ width: totalCredits > 0 ? `${(creditsUsed / totalCredits) * 100}%` : '0%' }}
+                style={{ width: totalCredits > 0 ? `${Math.min(100, (creditsUsed / totalCredits) * 100)}%` : '0%' }}
               ></div>
             </div>
           </div>
