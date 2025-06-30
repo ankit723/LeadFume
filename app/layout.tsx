@@ -87,6 +87,7 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             storageKey="leadfume-theme"
+            
           >
             {children}
             <Toaster />

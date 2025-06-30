@@ -23,6 +23,7 @@ interface ProcessedSubscriptionType extends Omit<PrismaSubscriptionType, 'priceI
 }
 
 function CheckoutContent() {
+  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [subscriptionTypes, setSubscriptionTypes] = useState<ProcessedSubscriptionType[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -30,7 +31,7 @@ function CheckoutContent() {
   const [currentSubscription, setCurrentSubscription] = useState<any>(null);
   const [isAnnual, setIsAnnual] = useState(false);
   const [priceId, setPriceId] = useState<string | null>(null);
-  const router = useRouter();
+  
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -197,6 +198,23 @@ function CheckoutContent() {
       toast.error('Purchase failed. Please try again.');
     }
   }
+
+    // if in production, show a message that the checkout is in beta and that it is not yet available`
+    if (process.env.NODE_ENV === 'production') {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-slate-50 dark:bg-slate-900">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">Checkout is in beta</h1>
+            <p className="text-muted-foreground">
+              The checkout is in beta and is not yet available.
+            </p>
+          </div>
+          <Button onClick={() => router.push('/dashboard')}>
+            Go to Dashboard
+          </Button>
+        </div>
+      );
+    }
   
   return (
     <div className="min-h-screen w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-slate-50 dark:bg-slate-900">

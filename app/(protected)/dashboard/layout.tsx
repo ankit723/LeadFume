@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/images/LeadFume_2.png";
+import light_logo from "@/public/light_logo.png";
+import dark_logo from "@/public/dark_logo.png";
 import { SendIcon } from "lucide-react";
 import ClientDashboardItems from "@/app/components/dashboard/ClientDashboardItems";
 import { ThemeToggle } from "@/components/ui/themeToggle";
@@ -42,7 +43,8 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                 <div className="flex h-full max-h-screen flex-col gap-2">
                     <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
                         <Link href="/" className="flex items-center gap-2 font-bold">
-                            <Image src={logo} alt="logo" className="" width={200} height={200}/>
+                            <Image src={light_logo} alt="logo" className="dark:hidden" width={200} height={200} />
+                            <Image src={dark_logo} alt="logo" className="dark:block" width={200} height={200} />
                         </Link>
                     </div>
                     <div className="flex-1 overflow-y-auto">

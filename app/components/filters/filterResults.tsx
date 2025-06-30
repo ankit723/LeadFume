@@ -176,7 +176,7 @@ const CreditUsageModal = ({
               <div className="flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-amber-800 dark:text-amber-200">
-                  <strong>Apollo {searchType} search</strong> will consume credits from your account.
+                  <strong>Leadfume {searchType} search</strong> will consume credits from your account.
                 </div>
               </div>
             </div>
@@ -270,7 +270,7 @@ const SearchResults = ({
         <CardContent className="p-6">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-muted-foreground">Searching Apollo database...</p>
+            <p className="text-muted-foreground">Searching Leadfume database...</p>
           </div>
         </CardContent>
       </Card>
@@ -283,7 +283,7 @@ const SearchResults = ({
         <CardContent className="p-6">
           <div className="text-center text-muted-foreground">
             <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>Configure your filters and click "Search Apollo" to find {searchType}</p>
+            <p>Configure your filters and click "Search Leadfume" to find {searchType}</p>
             <p className="text-xs mt-2">Note: Searching will consume credits from your account</p>
           </div>
         </CardContent>
@@ -300,7 +300,7 @@ const SearchResults = ({
         <CardContent className="p-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <Badge variant="secondary" className="bg-primary/10">
                 {pagination.total_entries.toLocaleString()} results found
               </Badge>
               <Badge variant="outline">
@@ -416,7 +416,7 @@ const PeopleResultsTable = ({ people, onExport, isUserPremium, handleEnrich, enr
           </Button>
         </div>
       </div>
-      <div className="max-w-[77rem] overflow-x-scroll border rounded-lg">
+      <div className="max-w-[77rem] overflow-x-scroll border rounded-lg ">
         <div className="">
           <table className="w-full text-sm border-collapse bg-card">
             <thead>
@@ -1035,7 +1035,7 @@ const FullScreenModal = ({
       <div className="px-6 py-4 border-b flex-shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Search className="h-5 w-5" />
-          Apollo {searchType === 'people' ? 'People' : 'Company'} Search Results - Full Screen
+          Leadfume {searchType === 'people' ? 'People' : 'Company'} Search Results - Full Screen
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="bg-primary/10 text-primary">
@@ -1089,7 +1089,7 @@ const FullScreenModal = ({
           </Card>
         </div>
         {/* Results Table */}
-        <div className="h-full flex-1 min-h-0 flex flex-col overflow-y-auto">
+        <div className="h-full flex-1 min-h-0 flex flex-col overflow-y-hidden">
           {searchType === 'people' ? (
             <FullScreenPeopleTable
               people={results.people || []}
@@ -1171,7 +1171,7 @@ const FullScreenPeopleTable = ({ people, isUserPremium, handleEnrich, enrichingI
           )}
         </div>
       </div>
-      <div className="border rounded-lg overflow-x-auto h-full">
+      <div className="border rounded-lg overflow-x-auto max-h-[33rem]">
         <div className="min-w-[1400px]">
           <table className="w-full text-sm border-collapse bg-card">
             <thead className="sticky top-0 bg-muted/80 backdrop-blur">
@@ -2327,7 +2327,7 @@ const FilterResults = ({ isUserPremium, user }: { isUserPremium: boolean, user: 
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Search className="h-5 w-5" />
-              Apollo {searchType === 'people' ? 'People' : 'Company'} Search
+              Leadfume {searchType === 'people' ? 'People' : 'Company'} Search
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -2366,7 +2366,7 @@ const FilterResults = ({ isUserPremium, user }: { isUserPremium: boolean, user: 
                 ) : (
                   <>
                     <Search className="h-4 w-4 mr-2" />
-                    Search Apollo
+                    Search Leadfume
                   </>
                 )}
                     </Button>

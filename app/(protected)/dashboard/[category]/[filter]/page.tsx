@@ -15,7 +15,7 @@ const page = async ({params}:PageProps) => {
   const DynamicFilter = filterComponent as React.ComponentType;
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="min-h-screen max-h-[200rem] flex flex-col">
       {/* Top section with user info */}
       <div className="flex-shrink-0 mx-4 mb-4">
         <UsersInfo />
