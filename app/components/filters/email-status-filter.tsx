@@ -182,7 +182,7 @@ const EmailStatusFilter = () => {
                       <span className="text-sm font-medium">Include catch-all emails</span>
                       <span className="text-xs text-muted-foreground cursor-help">ⓘ</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">Use Apollo intelligence to identify verified emails from catch-all domains.</p>
+                    <p className="text-xs text-muted-foreground">Use Leadfume intelligence to identify verified emails from catch-all domains.</p>
                   </div>
                   <Switch 
                     checked={currentFilters.includeCatchAll}

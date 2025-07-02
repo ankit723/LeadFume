@@ -83,10 +83,6 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                         Run AI Prompt
                         </Button>
 
-                        <ThemeToggle />
-                        
-                        <ClientUserButton />
-
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="secondary" className="bg-primary/80 cursor-pointer hover:bg-primary/90 transition-all duration-200 hover:shadow-xl hover:shadow-primary/25">Show Subscription Details</Button>
@@ -140,6 +136,10 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                                 </div>
                             </PopoverContent>
                         </Popover>
+
+                        <ThemeToggle />
+                        
+                        <ClientUserButton />
                     </div>
                 </header>
                 <main className="flex flex-1 flex-col overflow-y-auto px-4 py-6 lg:px-6 lg:py-8">

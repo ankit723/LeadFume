@@ -7,11 +7,11 @@ export default function OverView() {
     <section className="w-full flex flex-col px-4 md:px-8 lg:px-12 py-4 dark:bg-gray-950">
       <div className="relative w-full mt-0">
         <Image
-          src="/home/Image.svg" 
+          src="/home/dashboard_image.png" 
           alt="Web Dashboard"
-          width={900}
-          height={700}
-          className="w-full max-w-8xl mx-auto"
+          width={700}
+          height={500}
+          className="w-full max-w-8xl mx-auto rounded-lg border-2 border-gray-200 dark:border-gray-800 my-10"
         />
          <Image
           src="/home/Company.svg" 
