@@ -19,6 +19,7 @@ export default function OverView() {
           width={900}
           height={700}
           className="w-full max-w-8xl mx-auto -mt-5"
+          quality={100}
         />
       </div>
     </section>

@@ -148,4 +148,13 @@
   tile {
     @apply bg-primary
   }
+
+  .clerk-powered-by {
+    display: none !important;
+  }
+
+  .cl-internal-y44tp9{
+    display: none !important;
+  }
+
 }

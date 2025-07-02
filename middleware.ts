@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/payment/create-portal-session(.*)',
   '/sitemap.xml',
   '/robots.txt',
+  '/policies(.*)',
 ]) 
 
 

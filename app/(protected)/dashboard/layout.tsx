@@ -41,10 +41,10 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             {/* Desktop Sidebar - hidden on mobile */}
             <aside className="hidden md:block border-r bg-white dark:bg-background">
                 <div className="flex h-full max-h-screen flex-col gap-2">
-                    <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
-                        <Link href="/" className="flex items-center gap-2 font-bold">
-                            <Image src={light_logo} alt="logo" className="dark:hidden" width={200} height={200} />
-                            <Image src={dark_logo} alt="logo" className="dark:block" width={200} height={200} />
+                    <div className="flex h-14 items-center justify-center border-b lg:h-[60px]">
+                        <Link href="/">
+                            <Image src={light_logo} alt="logo" className="dark:hidden block" width={200} height={200} />
+                            <Image src={dark_logo} alt="logo" className="dark:block hidden" width={200} height={200} />
                         </Link>
                     </div>
                     <div className="flex-1 overflow-y-auto">
